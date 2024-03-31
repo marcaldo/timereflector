@@ -1,0 +1,19 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:vm="clr-namespace:TimeReflector.Settings" 
+		mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="TimeReflector.SettingsWindow"
+        Title="Settings"
+		ExtendClientAreaToDecorationsHint="True"
+		Background="#333333">
+	<Grid ColumnDefinitions="*, *, *" RowDefinitions="*,*,*"  Margin="4" Background="{DynamicResource BackgroundBrush}">
+		<StackPanel Margin="20">
+			<TextBlock Margin="0 5" >Album path:</TextBlock>
+			<TextBox x:Name="AlbumTextBox"/>
+			<Button Click="ClickHandler">Save</Button>
+		</StackPanel>
+		
+	</Grid>
+</Window>

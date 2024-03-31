@@ -37,8 +37,13 @@ namespace TimeReflector
 
         private void Label_OnPointerPressed(object sender, Avalonia.Input.PointerPressedEventArgs e)
         {
-            //Console.WriteLine("Label clicked!");
-            // Do different actions here
+            OpenSettings();
+        }
+
+        private void OpenSettings()
+        {
+            var settingsWindow = new SettingsWindow();
+            settingsWindow.Show();
         }
     }
 }
