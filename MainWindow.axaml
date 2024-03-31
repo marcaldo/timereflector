@@ -10,4 +10,18 @@
         ExtendClientAreaTitleBarHeightHint="-1"
         SystemDecorations="BorderOnly"
 		WindowState = "FullScreen">
+	<Grid ColumnDefinitions="*, *, *" RowDefinitions="*,*,*"  Margin="4" Background="{DynamicResource BackgroundBrush}">
+		<!--<Image x:Name="backgroundImage" Source="C:/Users/marca/source/repos/timereflector/Images/superior.jpg"/>-->
+		<TextBlock
+			x:Name="clickableLabel"
+			Text="Clickable Label"
+			HorizontalAlignment="Center"
+			VerticalAlignment="Center"
+			FontSize="50"
+			Foreground="White"
+			Background="Transparent"
+			Opacity="1"
+			Grid.Row="2" Grid.Column="2"
+			PointerPressed="Label_OnPointerPressed"/>
+	</Grid>
 </Window>
