@@ -20,7 +20,7 @@ namespace TimeReflector.Data
             File.WriteAllText(ConfigFile, jsonSettings);
         }
 
-        public Settings LoadSettings()
+        private Settings LoadSettings()
         {
             string jsonString = File.ReadAllText(ConfigFile);
             var settings = JsonSerializer.Deserialize<Settings>(jsonString);
