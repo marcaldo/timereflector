@@ -11,11 +11,12 @@ namespace TimeReflector
     public partial class SettingsWindow : Window
     {
         private TextBox? albumTextBox;
-        string ConfigFile = default!;
+        SettingsManager settingsManager = new();
+        Settings configuration = new();
+
         public SettingsWindow()
         {
             InitializeComponent();
-
         }
 
         private void InitializeComponent()
@@ -23,10 +24,9 @@ namespace TimeReflector
             AvaloniaXamlLoader.Load(this);
             albumTextBox = this.FindControl<TextBox>("AlbumTextBox");
 
-            ConfigFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "config.json");
+            configuration = settingsManager.Configuration; 
 
             LoadSettings();
-
         }
 
 
@@ -37,26 +37,15 @@ namespace TimeReflector
 
         private void SaveSettings()
         {
-            Settings settings = new()
-            {
-                AlbumsPath = albumTextBox?.Text ?? "",
-                Temperature = new() { Display = TemperatureDisplayTypes.Celsius }
+            configuration.AlbumsPath = albumTextBox?.Text ?? "";
+            configuration.Temperature = new() { Display = TemperatureDisplayTypes.Celsius };
 
-            };
-
-            string jsonSettings = JsonSerializer.Serialize(settings);
-
-            File.WriteAllText(ConfigFile, jsonSettings);
-
+            settingsManager.SaveSettings();
         }
 
         private void LoadSettings()
         {
-            string jsonString = File.ReadAllText(ConfigFile);
-
-            var settings = JsonSerializer.Deserialize<Settings>(jsonString);
-
-            albumTextBox!.Text = settings?.AlbumsPath;
+            albumTextBox!.Text = configuration?.AlbumsPath;
 
         }
     }
