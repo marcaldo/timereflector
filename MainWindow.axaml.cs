@@ -9,7 +9,7 @@ namespace TimeReflector
 {
     public partial class MainWindow : Window
     {
-        private ImageBrush _backgroundBrush = new();
+        private ImageBrush BackgroundBrush = new();
         public MainWindow()
         {
             InitializeComponent();
@@ -23,7 +23,7 @@ namespace TimeReflector
 
         private void DisplayImages()
         {
-            LoadBackgroundImage("superior.jpg");
+            LoadBackgroundImage("vertical.jpg");
         }
 
         private void LoadBackgroundImage(string fileName)
@@ -31,8 +31,8 @@ namespace TimeReflector
             string imagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images", fileName);
 
             var backgroundImage = new Bitmap(imagePath);
-            _backgroundBrush = new ImageBrush(backgroundImage);
-            Resources["BackgroundBrush"] = _backgroundBrush;
+            BackgroundBrush = new ImageBrush(backgroundImage);
+            Resources["BackgroundBrush"] = BackgroundBrush;
         }
 
         private void Label_OnPointerPressed(object sender, Avalonia.Input.PointerPressedEventArgs e)
