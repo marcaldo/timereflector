@@ -1,9 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
-using System;
-using System.IO;
-using System.Text.Json;
 using TimeReflector.Data;
 
 namespace TimeReflector
