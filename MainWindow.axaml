@@ -11,17 +11,16 @@
         SystemDecorations="BorderOnly"
 		WindowState = "FullScreen">
 	<Grid ColumnDefinitions="*, *, *" RowDefinitions="*,*,*"  Margin="4" Background="{DynamicResource BackgroundBrush}">
-		<!--<Image x:Name="backgroundImage" Source="C:/Users/marca/source/repos/timereflector/Images/superior.jpg"/>-->
-		<TextBlock
+		<!--<TextBlock
 			x:Name="clickableLabel"
-			Text="Clickable Label"
+			Text="32 °F"
 			HorizontalAlignment="Center"
 			VerticalAlignment="Center"
-			FontSize="50"
+			FontSize="70"
 			Foreground="White"
 			Background="Transparent"
 			Opacity="1"
 			Grid.Row="2" Grid.Column="2"
-			PointerPressed="Label_OnPointerPressed"/>
+			PointerPressed="Label_OnPointerPressed"/>-->
 	</Grid>
 </Window>
