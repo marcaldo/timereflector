@@ -4,5 +4,6 @@
     {
         public string ImageFileName { get; set; } = default!;
         public bool IsVideo { get; set; } = false;
+        public int Rotate { get; set; }
     }
 }
