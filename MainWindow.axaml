@@ -5,12 +5,14 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="TimeReflector.MainWindow"
         Title="TimeReflector"
+		Background="Gray"
 		ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaChromeHints="NoChrome"
         ExtendClientAreaTitleBarHeightHint="-1"
         SystemDecorations="BorderOnly"
-		Background="Black"
-		WindowState = "FullScreen">
+		WindowState = "FullScreen"
+		>
+		
 	<!--<grid x:Name="grd" columndefinitions="*, *, *" rowdefinitions="*,*,*"  margin="4" >
 		<textblock
 			x:name="clickablelabel"
