@@ -11,17 +11,17 @@
         SystemDecorations="BorderOnly"
 		Background="Black"
 		WindowState = "FullScreen">
-	<Grid ColumnDefinitions="*, *, *" RowDefinitions="*,*,*"  Margin="4" Background="{DynamicResource BackgroundBrush}">
-		<TextBlock
-			x:Name="clickableLabel"
-			Text="32 °F"
-			HorizontalAlignment="Center"
-			VerticalAlignment="Center"
-			FontSize="70"
-			Foreground="White"
-			Background="Transparent"
-			Opacity="1"
-			Grid.Row="2" Grid.Column="2"
-			PointerPressed="Label_OnPointerPressed"/>
-	</Grid>
+	<!--<grid x:Name="grd" columndefinitions="*, *, *" rowdefinitions="*,*,*"  margin="4" >
+		<textblock
+			x:name="clickablelabel"
+			text="32 °f"
+			horizontalalignment="center"
+			verticalalignment="center"
+			fontsize="70"
+			foreground="white"
+			background="transparent"
+			opacity="1"
+			grid.row="2" grid.column="2"
+			pointerpressed="label_onpointerpressed"/>
+	</grid>-->
 </Window>
