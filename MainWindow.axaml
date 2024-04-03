@@ -12,7 +12,7 @@
         SystemDecorations="BorderOnly"
 		WindowState = "FullScreen"
 		>
-		
+		<!--<TextBlock x:Name="TimeTextBlock" />-->
 	<!--<grid x:Name="grd" columndefinitions="*, *, *" rowdefinitions="*,*,*"  margin="4" >
 		<textblock
 			x:name="clickablelabel"

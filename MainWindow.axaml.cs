@@ -1,14 +1,10 @@
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
-using ExifLib;
-using SkiaSharp;
 using System;
 using System.IO;
-using System.Threading;
 using System.Timers;
 using TimeReflector.Data;
 
@@ -18,133 +14,90 @@ namespace TimeReflector
     {
         private DisplayManager displayManager = new();
         private SettingsManager settingsManager = new();
-        private double windowHeight = 0;
 
-        System.Timers.Timer timer = new System.Timers.Timer();
-        private System.Timers.Timer _timer;
+        private TextBlock dateTimeTextBlock;
+        private TextBlock tempTextBlock;
 
+        private Timer timerDisplay;
+        private Timer timerTemp;
+        private Timer timerDateTime;
 
         public MainWindow()
         {
             InitializeComponent();
-            //this.WindowState = WindowState.Maximized;
-
-
         }
-
 
         private void InitializeComponent()
         {
-            // Load the XAML file (MainWindow.axaml)
             AvaloniaXamlLoader.Load(this);
 
+            tempTextBlock = new TextBlock() { Name = "TempTextBlock" };
+            dateTimeTextBlock = new TextBlock() { Name = "DateTimeTextBlock" };
+
+            RunDisplay();
             SetupTimer();
-
-            //this.Activated += (sender, e) =>
-            //{
-            //    this.windowHeight = this.Height;
-
-            //    // Do something with windowHeight
-            //};
-
-            ////// Set the window properties
-            ////this.Width = 800;
-            ////this.Height = 600;
-
-            //// Create a Grid
-            //Grid grid = new Grid();
-            //grid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Star));
-            //grid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Star));
-            //grid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Star));
-            //grid.RowDefinitions.Add(new RowDefinition(GridLength.Star));
-            //grid.RowDefinitions.Add(new RowDefinition(GridLength.Star));
-            //grid.RowDefinitions.Add(new RowDefinition(GridLength.Star));
-
-
-
-
-            //// Load the background image
-            //Bitmap backgroundImage = new Bitmap("C:/Users/marca/OneDrive/Dev/TimeReflector/Album/ice.jpg");
-
-            //// Set the background image
-            ////double height = this.ClientSize.Height;
-
-            //Image background = new Image
-            //{
-            //    Source = backgroundImage,
-            //    Stretch = Stretch.UniformToFill,
-            //    //Height = height
-            //};
-
-            //RotateTransform rotateTransform = new RotateTransform(0);
-            //background.RenderTransform = rotateTransform;
-
-            //// Add the background image to the Grid
-            //grid.Children.Add(background);
-
-            //// Create a TextBlock
-            ////TextBlock textBlock = new TextBlock();
-            ////textBlock.Text = "Hello, Avalonia!";
-            ////textBlock.TextAlignment = TextAlignment.Center;
-            ////textBlock.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center;
-            ////textBlock.FontSize = 24;
-            ////textBlock.Foreground = Brushes.White;
-
-            //// Add the TextBlock to the Grid
-            ////grid.Children.Add(textBlock);
-
-            //// Set the content of the window to the Grid
-            //this.Content = grid;
-
-            //var displayList = displayManager.GetDisplayItems();
-
-            // timer = new Timer(
-            //callback: new TimerCallback(TimerTask),
-            //state: null,
-            //dueTime: 1000,
-            //period: 5000);
-
-
-            //// Set the interval to 2000 milliseconds (2 seconds)
-            //timer.Interval = 5000;
-
-            //// Hook up the Elapsed event for the timer
-            //timer.Elapsed += TimerElapsed;
-
-            //// Start the timer
-            //timer.Start();
-
         }
 
         private void SetupTimer()
         {
-            _timer = new System.Timers.Timer();
-            _timer.Interval = 3000; // Interval in milliseconds (1000ms = 1 second)
-            _timer.AutoReset = true;
-            _timer.Elapsed += TimerElapsed;
+            timerDisplay = new Timer();
+            timerDisplay.Interval = 3000;
+            timerDisplay.AutoReset = true;
+            timerDisplay.Elapsed += TimerElapsed;
+
+            timerTemp = new Timer();
+            timerTemp.Interval = 10000;
+            timerTemp.AutoReset = true;
+            timerTemp.Elapsed += TimerTempElapsed;
+
+            timerDateTime = new Timer();
+            timerDateTime.Interval = 1000;
+            timerDateTime.AutoReset = true;
+            timerDateTime.Elapsed += TimerDateTimeElapsed;
         }
 
         protected override void OnOpened(EventArgs e)
         {
             base.OnOpened(e);
-            _timer.Start(); // Start the timer when the window is opened
+            timerDisplay.Start();
+            timerTemp.Start();
+            timerDateTime.Start();
         }
 
-
-        void TimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
+        void TimerElapsed(object sender, ElapsedEventArgs e)
         {
             Dispatcher.UIThread.InvokeAsync(() =>
             {
-                var displayItem = displayManager.GetNextItem();
-
-                if (displayItem is null) // No items in the album.
-                {
-                    timer.Stop();
-                }
-
-                Display(displayItem!);
+                RunDisplay();
             });
+        }
 
+        void TimerTempElapsed(object sender, ElapsedEventArgs e)
+        {
+            Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                dateTimeTextBlock.Text = DateTime.Now.ToString("t");
+            });
+        }
+
+        void TimerDateTimeElapsed(object sender, ElapsedEventArgs e)
+        {
+            Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                dateTimeTextBlock.Text = DateTime.Now.ToString("t");
+            });
+        }
+
+        private void RunDisplay()
+        {
+            var displayItem = displayManager.GetNextItem();
+
+            if (displayItem is null) // No items in the album.
+            {
+                timerDisplay.Stop();
+            }
+
+            Display(displayItem!);
         }
 
         private void Display(DisplayItem displayItem)
@@ -162,9 +115,28 @@ namespace TimeReflector
             // Set the Border as the background of the grid
             grid.Background = new VisualBrush { Visual = imageContainer };
 
-            // Add label
-            Label weatherText = WeatherText();
-            grid.Children.Add(weatherText);
+            //// Add label
+            //Label weatherText = WeatherText();
+
+            //grid.Children.Add(weatherText);
+
+            dateTimeTextBlock = new TextBlock();
+            dateTimeTextBlock.Text = DateTime.Now.ToString("t");
+            dateTimeTextBlock.FontSize = 100;
+            dateTimeTextBlock.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left;
+            dateTimeTextBlock.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center;
+            Grid.SetColumn(dateTimeTextBlock, 0);
+            Grid.SetRow(dateTimeTextBlock, 2);
+            grid.Children.Add(dateTimeTextBlock);
+
+            tempTextBlock = new TextBlock();
+            tempTextBlock.Text = "41°F 5°C  ";
+            tempTextBlock.FontSize = 100;
+            tempTextBlock.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right;
+            tempTextBlock.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center;
+            Grid.SetColumn(tempTextBlock, 2);
+            Grid.SetRow(tempTextBlock, 2);
+            grid.Children.Add(tempTextBlock);
 
             // Add the grid to the window
             this.Content = grid;
@@ -206,7 +178,8 @@ namespace TimeReflector
                 Content = "41°F 5°C  ",
                 FontSize = 50,
                 HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right,
-                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top
+                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top,
+                Name = "WeatherText"
             };
 
             Grid.SetColumn(weatherText, 2);
@@ -224,9 +197,9 @@ namespace TimeReflector
             grid.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch;
 
             // Define ColumnDefinitions
-            grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(0.5, GridUnitType.Star) });
             grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
-            grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(0.5, GridUnitType.Star) });
+            grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
+            grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
 
             // Define RowDefinitions
             grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(0.5, GridUnitType.Star) });
@@ -235,36 +208,6 @@ namespace TimeReflector
 
             return grid;
         }
-
-
-
-        //private void RefreshScreen(DisplayItem displayItem)
-        //{
-        //    string albumPath = settingsManager.Configuration.AlbumsPath;
-        //    string imagePath = Path.Combine(albumPath, displayItem.ImageFileName);
-
-        //    Bitmap backgroundImage = new(imagePath);
-
-
-        //    //backgroundBrush = new ImageBrush(backgroundImage);
-
-        //    //if (displayItem.Rotate > 0)
-        //    //{
-        //    //    backgroundBrush.AlignmentX = AlignmentX.Center;
-        //    //    backgroundBrush.AlignmentY = AlignmentY.Center;
-
-        //    //    var transform = new RotateTransform();
-        //    //    transform.Angle = displayItem.Rotate;
-        //    //    transform.CenterX = backgroundImage.Size.Width / 2;
-        //    //    transform.CenterY = backgroundImage.Size.Height / 2;
-
-        //    //    backgroundBrush.Transform = transform;
-        //    //}
-
-        //    //Resources["BackgroundBrush"] = backgroundBrush;
-        //}
-
-
 
         private void Label_OnPointerPressed(object sender, Avalonia.Input.PointerPressedEventArgs e)
         {
