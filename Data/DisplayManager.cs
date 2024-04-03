@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace TimeReflector.Data
 {
@@ -9,7 +10,9 @@ namespace TimeReflector.Data
     {
         SettingsManager settingsManager = new();
 
-        public IList<DisplayItem> GetDisplayItems()
+        public static List<DisplayItem> DisplayItems { get; set; } = new();
+
+        public List<DisplayItem> GetDisplayItems()
         {
             var albumPath = settingsManager.Configuration.AlbumsPath;
 
@@ -22,11 +25,11 @@ namespace TimeReflector.Data
 
             foreach (var file in dirInfo.GetFiles())
             {
-                var rotateValue = Rotate(file.FullName);
+                var rotateValue = GetRotation(file.FullName);
                 displayItems.Add(new DisplayItem
                 {
                     ImageFileName = file.Name,
-                    IsVideo = !file.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase)  ,
+                    IsVideo = !file.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase),
                     Rotate = rotateValue
                 });
             }
@@ -34,7 +37,22 @@ namespace TimeReflector.Data
             return displayItems;
         }
 
-        private static int Rotate(string imagePath)
+        public DisplayItem? GetNextItem()
+        {
+            var displayItem = DisplayItems.FirstOrDefault();
+
+            if (displayItem is null)
+            {
+                DisplayItems = GetDisplayItems();
+                displayItem = DisplayItems.FirstOrDefault();
+            }
+
+            if(displayItem is not null) DisplayItems.Remove(displayItem);
+
+            return displayItem;
+        }
+
+        private static int GetRotation(string imagePath)
         {
             using ExifReader reader = new ExifReader(imagePath);
             reader.GetTagValue(ExifTags.Orientation, out object orientationValue);

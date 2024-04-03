@@ -3,10 +3,13 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
+using Avalonia.Threading;
 using ExifLib;
 using SkiaSharp;
 using System;
 using System.IO;
+using System.Threading;
+using System.Timers;
 using TimeReflector.Data;
 
 namespace TimeReflector
@@ -17,6 +20,10 @@ namespace TimeReflector
         private SettingsManager settingsManager = new();
         private double windowHeight = 0;
 
+        System.Timers.Timer timer = new System.Timers.Timer();
+        private System.Timers.Timer _timer;
+
+
         public MainWindow()
         {
             InitializeComponent();
@@ -25,10 +32,13 @@ namespace TimeReflector
 
         }
 
+
         private void InitializeComponent()
         {
             // Load the XAML file (MainWindow.axaml)
             AvaloniaXamlLoader.Load(this);
+
+            SetupTimer();
 
             //this.Activated += (sender, e) =>
             //{
@@ -86,10 +96,54 @@ namespace TimeReflector
             //// Set the content of the window to the Grid
             //this.Content = grid;
 
-            var displayList = displayManager.GetDisplayItems();
+            //var displayList = displayManager.GetDisplayItems();
+
+            // timer = new Timer(
+            //callback: new TimerCallback(TimerTask),
+            //state: null,
+            //dueTime: 1000,
+            //period: 5000);
 
 
-            Display(displayList[0]);
+            //// Set the interval to 2000 milliseconds (2 seconds)
+            //timer.Interval = 5000;
+
+            //// Hook up the Elapsed event for the timer
+            //timer.Elapsed += TimerElapsed;
+
+            //// Start the timer
+            //timer.Start();
+
+        }
+
+        private void SetupTimer()
+        {
+            _timer = new System.Timers.Timer();
+            _timer.Interval = 3000; // Interval in milliseconds (1000ms = 1 second)
+            _timer.AutoReset = true;
+            _timer.Elapsed += TimerElapsed;
+        }
+
+        protected override void OnOpened(EventArgs e)
+        {
+            base.OnOpened(e);
+            _timer.Start(); // Start the timer when the window is opened
+        }
+
+
+        void TimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                var displayItem = displayManager.GetNextItem();
+
+                if (displayItem is null) // No items in the album.
+                {
+                    timer.Stop();
+                }
+
+                Display(displayItem!);
+            });
 
         }
 
@@ -121,8 +175,6 @@ namespace TimeReflector
         {
             var height = this.ClientSize.Height;
 
-
-
             string albumPath = settingsManager.Configuration.AlbumsPath;
             string imagePath = Path.Combine(albumPath, displayItem.ImageFileName);
 
@@ -132,8 +184,8 @@ namespace TimeReflector
             Image backgroundImage = new Image
             {
                 Source = image,
-                //Stretch = Stretch.UniformToFill,
-                Height = height// this.windowHeight,
+                Stretch = Stretch.UniformToFill,
+                Height = height
             };
 
             if (displayItem.Rotate > 0)
