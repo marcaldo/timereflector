@@ -35,7 +35,7 @@ namespace TimeReflector
         private void SaveSettings()
         {
             configuration.AlbumsPath = albumTextBox?.Text ?? "";
-            configuration.Temperature = new() { Display = TemperatureDisplayTypes.Celsius };
+            configuration.Weather = new() { TemperatureFormat = TemperatureFormatType.C };
 
             settingsManager.SaveSettings();
         }

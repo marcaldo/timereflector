@@ -12,8 +12,8 @@ namespace TimeReflector
 {
     public partial class MainWindow : Window
     {
-        private DisplayManager displayManager = new();
-        private SettingsManager settingsManager = new();
+        private readonly DisplayManager displayManager = new();
+        private readonly SettingsManager settingsManager = new();
 
         private TextBlock dateTimeTextBlock;
         private TextBlock tempTextBlock;
@@ -34,8 +34,14 @@ namespace TimeReflector
             tempTextBlock = new TextBlock() { Name = "TempTextBlock" };
             dateTimeTextBlock = new TextBlock() { Name = "DateTimeTextBlock" };
 
+
             RunDisplay();
             SetupTimer();
+        }
+
+        private void AttachEvents()
+        {
+            dateTimeTextBlock.PointerPressed += DateTimeTextBox_Click;
         }
 
         private void SetupTimer()
@@ -62,6 +68,9 @@ namespace TimeReflector
             timerDisplay.Start();
             timerTemp.Start();
             timerDateTime.Start();
+
+            AttachEvents();
+
         }
 
         void TimerElapsed(object sender, ElapsedEventArgs e)
@@ -114,11 +123,6 @@ namespace TimeReflector
 
             // Set the Border as the background of the grid
             grid.Background = new VisualBrush { Visual = imageContainer };
-
-            //// Add label
-            //Label weatherText = WeatherText();
-
-            //grid.Children.Add(weatherText);
 
             dateTimeTextBlock = new TextBlock();
             dateTimeTextBlock.Text = DateTime.Now.ToString("t");
@@ -209,7 +213,7 @@ namespace TimeReflector
             return grid;
         }
 
-        private void Label_OnPointerPressed(object sender, Avalonia.Input.PointerPressedEventArgs e)
+        private void DateTimeTextBox_Click(object? sender, Avalonia.Input.PointerPressedEventArgs e)
         {
             OpenSettings();
         }
