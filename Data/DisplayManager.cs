@@ -47,9 +47,13 @@ namespace TimeReflector.Data
                 displayItem = DisplayItems.FirstOrDefault();
             }
 
-            if(displayItem is not null) DisplayItems.Remove(displayItem);
+            if (displayItem is not null) DisplayItems.Remove(displayItem);
 
             return displayItem;
+        }
+
+        public string GetTime()
+        {
         }
 
         private static int GetRotation(string imagePath)
