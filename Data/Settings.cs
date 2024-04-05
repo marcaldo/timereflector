@@ -5,8 +5,8 @@
         public string AlbumsPath { get; set; } = default!;
         public string Album { get; set; } = default!;
         public UnitSystemType UnitSystem { get; set; } = UnitSystemType.Metric;
+        public DateTimeFormat DateTimeFormat { get; set; } = new();
         public Weather Weather { get; set; } = new();
-
     }
 
     public sealed class Weather
@@ -16,6 +16,19 @@
         public bool UseCity { get; set; }
     }
 
+    public sealed class DateTimeFormat : FontStyle
+    {
+        public TimeFormatType FormatType { get; set; } = TimeFormatType.T12hs;
+        public DateFormatType DateFormat { get; set; } = DateFormatType.Date1_xWD_M_D;
+
+        public int FontSize { get; set; }
+    }
+
+    public class FontStyle
+    {
+        public int Size { get; set; }
+        public string Color { get; set; } = "#FFFFFF";
+    }
     public enum UnitSystemType
     {
         Metric,

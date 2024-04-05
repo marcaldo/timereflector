@@ -47,7 +47,7 @@ namespace TimeReflector
         private void SetupTimer()
         {
             timerDisplay = new Timer();
-            timerDisplay.Interval = 3000;
+            timerDisplay.Interval = 5000;
             timerDisplay.AutoReset = true;
             timerDisplay.Elapsed += TimerElapsed;
 
@@ -93,7 +93,7 @@ namespace TimeReflector
         {
             Dispatcher.UIThread.InvokeAsync(() =>
             {
-                dateTimeTextBlock.Text = DateTime.Now.ToString("t");
+                dateTimeTextBlock.Text = displayManager.DateTimeDisplayData.Time;
             });
         }
 
@@ -124,14 +124,11 @@ namespace TimeReflector
             // Set the Border as the background of the grid
             grid.Background = new VisualBrush { Visual = imageContainer };
 
-            dateTimeTextBlock = new TextBlock();
-            dateTimeTextBlock.Text = DateTime.Now.ToString("t");
-            dateTimeTextBlock.FontSize = 100;
-            dateTimeTextBlock.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left;
-            dateTimeTextBlock.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center;
-            Grid.SetColumn(dateTimeTextBlock, 0);
-            Grid.SetRow(dateTimeTextBlock, 2);
-            grid.Children.Add(dateTimeTextBlock);
+            Grid dateTimeGrid = DateTimeGrid();
+            Grid.SetColumn(dateTimeGrid, 0);
+            Grid.SetRow(dateTimeGrid, 2);
+            grid.Children.Add(dateTimeGrid);
+
 
             tempTextBlock = new TextBlock();
             tempTextBlock.Text = "41°F 5°C  ";
@@ -174,21 +171,31 @@ namespace TimeReflector
             return backgroundImage;
         }
 
-        private static Label WeatherText()
+        private Grid DateTimeGrid()
         {
-            // Add the label to the third column and third row
-            Label weatherText = new()
-            {
-                Content = "41°F 5°C  ",
-                FontSize = 50,
-                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right,
-                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top,
-                Name = "WeatherText"
-            };
+            Grid grid = new();
 
-            Grid.SetColumn(weatherText, 2);
-            Grid.SetRow(weatherText, 2);
-            return weatherText;
+            grid.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch;
+            grid.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch;
+
+            // Define ColumnDefinitions
+            grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
+            grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(0.5, GridUnitType.Star) });
+
+            // Define RowDefinitions
+            grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Star) });
+            grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(0.5, GridUnitType.Star) });
+
+            dateTimeTextBlock = new TextBlock();
+            dateTimeTextBlock.Text = displayManager.DateTimeDisplayData.Time;
+            dateTimeTextBlock.FontSize = 100;
+            dateTimeTextBlock.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left;
+            dateTimeTextBlock.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center;
+            Grid.SetColumn(dateTimeTextBlock, 0);
+            Grid.SetRow(dateTimeTextBlock, 2);
+            grid.Children.Add(dateTimeTextBlock);
+
+            return grid;
         }
 
         private static Grid CreateWindowGrid()

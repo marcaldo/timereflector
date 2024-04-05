@@ -10,8 +10,10 @@ namespace TimeReflector.Data
     {
         SettingsManager settingsManager = new();
 
-        public static List<DisplayItem> DisplayItems { get; set; } = new();
+        private DateTimeDisplayData dateTimeDisplayDataValue = new DateTimeDisplayData();
 
+        public static List<DisplayItem> DisplayItems { get; set; } = new();
+        public DateTimeDisplayData DateTimeDisplayData { get => RefreshDateTimeDisplay(); }
         public List<DisplayItem> GetDisplayItems()
         {
             var albumPath = settingsManager.Configuration.AlbumsPath;
@@ -52,8 +54,26 @@ namespace TimeReflector.Data
             return displayItem;
         }
 
-        public string GetTime()
+        public DateTimeDisplayData RefreshDateTimeDisplay()
         {
+            var now = DateTime.Now;
+
+            switch (settingsManager.Configuration.DateTimeFormat.FormatType)
+            {
+                case TimeFormatType.None:
+                    break;
+                case TimeFormatType.T12hs:
+                    dateTimeDisplayDataValue.Time = now.ToString("hh:mm tt");
+                    dateTimeDisplayDataValue.AmPm = now.ToString("tt");
+                    break;
+                case TimeFormatType.T24hs:
+                default:
+                    dateTimeDisplayDataValue.Time = DateTime.Now.ToString("HH:mm");
+                    dateTimeDisplayDataValue.AmPm = "";
+                    break;
+            }
+
+            return dateTimeDisplayDataValue;
         }
 
         private static int GetRotation(string imagePath)

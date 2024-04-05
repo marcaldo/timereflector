@@ -1,0 +1,9 @@
+﻿namespace TimeReflector.Data
+{
+    public class DateTimeDisplayData
+    {
+        public  string Time { get; set; } = default!;
+        public  string AmPm { get; set; } = default!;
+        public  string Date { get; set; } = default!;
+    }
+}
