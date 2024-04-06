@@ -63,7 +63,7 @@ namespace TimeReflector.Data
                 case TimeFormatType.None:
                     break;
                 case TimeFormatType.T12hs:
-                    dateTimeDisplayDataValue.Time = now.ToString("hh:mm tt");
+                    dateTimeDisplayDataValue.Time = now.ToString("hh:mm");
                     dateTimeDisplayDataValue.AmPm = now.ToString("tt");
                     break;
                 case TimeFormatType.T24hs:
