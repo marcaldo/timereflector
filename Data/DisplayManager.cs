@@ -1,4 +1,5 @@
 ﻿using ExifLib;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -58,7 +59,7 @@ namespace TimeReflector.Data
         {
             var now = DateTime.Now;
 
-            switch (settingsManager.Configuration.DateTimeFormat.FormatType)
+            switch (settingsManager.Configuration.DateTimeFormat.TimeFormat)
             {
                 case TimeFormatType.None:
                     break;
@@ -72,6 +73,28 @@ namespace TimeReflector.Data
                     dateTimeDisplayDataValue.AmPm = "";
                     break;
             }
+
+            dateTimeDisplayDataValue.Date = settingsManager.Configuration.DateTimeFormat.DateFormat switch
+            {
+                DateFormatType.None => "",
+                // Date1: TUE, Set 23
+                DateFormatType.Date1_xWD_M_D => $"{now.DayOfWeek.ToString()[..3].ToUpper()}, {now:MMM} {now:dd}",
+                // Date2: TUESDAY, Set 23
+                DateFormatType.Date2_xWDDD_M_D => $"{now.DayOfWeek.ToString().ToUpper()}, {now:MMM} {now:dd}",
+                // Date3: Tuesday 23
+                DateFormatType.Date3_WD_D => $"{now.DayOfWeek} {now:dd}",
+                // Date4: Tuesday
+                DateFormatType.Date4_WD => $"{now.DayOfWeek}",
+                // Date5: 23 SEP 2021
+                DateFormatType.Date5_DD_MMM_YY => $"{now:dd} {now:MMM} {now:yyyy}",
+                // Date6: SEP 23 2021
+                DateFormatType.Date6_MMM_DD_YY => $"{now:MMM} {now:dd} {now:yyyy}",
+                // Date7: 23/09/21
+                DateFormatType.Date7_DD_MM_YY => $"{now:dd}/{now:MM}/{now:yyyy}",
+                // Date8: 09/23/21
+                DateFormatType.Date8_MM_DD_YY => $"{now:MM}/{now:dd}/{now:yyyy}"
+            };
+
 
             return dateTimeDisplayDataValue;
         }

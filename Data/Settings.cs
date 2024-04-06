@@ -1,4 +1,6 @@
-﻿namespace TimeReflector.Data
+﻿using Avalonia.Media;
+
+namespace TimeReflector.Data
 {
     public sealed class Settings
     {
@@ -16,18 +18,19 @@
         public bool UseCity { get; set; }
     }
 
-    public sealed class DateTimeFormat : FontStyle
+    public  class DateTimeFormat 
     {
-        public TimeFormatType FormatType { get; set; } = TimeFormatType.T12hs;
+        public TimeFormatType TimeFormat { get; set; } = TimeFormatType.T12hs;
         public DateFormatType DateFormat { get; set; } = DateFormatType.Date1_xWD_M_D;
+        public FontStyle TimeFontStyle { get; set; } =new FontStyle { FontSize = 100 };
+        public FontStyle DateFontStyle { get; set; }   = new FontStyle { FontSize = 45 };   
 
-        public int FontSize { get; set; }
     }
 
     public class FontStyle
     {
-        public int Size { get; set; }
-        public string Color { get; set; } = "#FFFFFF";
+        public int FontSize { get; set; } = 100;
+        public IImmutableBrush FontForegroundColor { get; set; } = Brushes.White;
     }
     public enum UnitSystemType
     {

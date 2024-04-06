@@ -15,9 +15,10 @@ namespace TimeReflector
         private readonly DisplayManager displayManager = new();
         private readonly SettingsManager settingsManager = new();
 
-        private TextBlock dateTimeTextBlock;
-        private TextBlock timeAmPmTextBlock;
-        private TextBlock tempTextBlock;
+        private TextBlock timeTextBlock = new();
+        private TextBlock timeAmPmTextBlock = new();
+        private TextBlock dateTextBlock = new();
+        private TextBlock tempTextBlock = new();
 
         private Timer timerDisplay;
         private Timer timerTemp;
@@ -32,18 +33,13 @@ namespace TimeReflector
         {
             AvaloniaXamlLoader.Load(this);
 
-            tempTextBlock = new TextBlock();
-            dateTimeTextBlock = new TextBlock();
-            timeAmPmTextBlock = new TextBlock();
-
-
             RunDisplay();
             SetupTimer();
         }
 
         private void AttachEvents()
         {
-            dateTimeTextBlock.PointerPressed += DateTimeTextBox_Click;
+            timeTextBlock.PointerPressed += DateTimeTextBox_Click;
         }
 
         private void SetupTimer()
@@ -87,8 +83,9 @@ namespace TimeReflector
         {
             Dispatcher.UIThread.InvokeAsync(() =>
             {
-                dateTimeTextBlock.Text = displayManager.DateTimeDisplayData.Time;
+                timeTextBlock.Text = displayManager.DateTimeDisplayData.Time;
                 timeAmPmTextBlock.Text = displayManager.DateTimeDisplayData.AmPm;
+                dateTextBlock.Text = displayManager.DateTimeDisplayData.Date;
             });
         }
 
@@ -96,7 +93,7 @@ namespace TimeReflector
         {
             Dispatcher.UIThread.InvokeAsync(() =>
             {
-                dateTimeTextBlock.Text = displayManager.DateTimeDisplayData.Time;
+                timeTextBlock.Text = displayManager.DateTimeDisplayData.Time;
             });
         }
 
@@ -189,25 +186,41 @@ namespace TimeReflector
             grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Star) });
             grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(0.5, GridUnitType.Star) });
 
-            dateTimeTextBlock = new TextBlock();
-            dateTimeTextBlock.Text = displayManager.DateTimeDisplayData.Time;
-            dateTimeTextBlock.FontSize = displayManager.DateTimeDisplayData.TimeFontSize;
-            dateTimeTextBlock.Foreground = displayManager.DateTimeDisplayData.TimeForegroundColor;
-            dateTimeTextBlock.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right;
-            dateTimeTextBlock.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Bottom;
-            Grid.SetColumn(dateTimeTextBlock, 0);
-            Grid.SetRow(dateTimeTextBlock, 0);
-            grid.Children.Add(dateTimeTextBlock);
+            timeTextBlock = new TextBlock
+            {
+                Text = displayManager.DateTimeDisplayData.Time,
+                FontSize = displayManager.DateTimeDisplayData.TimeFontStyle.FontSize,
+                Foreground = displayManager.DateTimeDisplayData.TimeFontStyle.FontForegroundColor,
+                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right,
+                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Bottom
+            };
+            Grid.SetColumn(timeTextBlock, 0);
+            Grid.SetRow(timeTextBlock, 0);
+            grid.Children.Add(timeTextBlock);
 
-            timeAmPmTextBlock = new TextBlock();
-            timeAmPmTextBlock.Text = displayManager.DateTimeDisplayData.AmPm;
-            timeAmPmTextBlock.FontSize = displayManager.DateTimeDisplayData.TimeFontSize * 0.4;
-            timeAmPmTextBlock.Foreground = displayManager.DateTimeDisplayData.TimeForegroundColor;
-            timeAmPmTextBlock.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left;
-            timeAmPmTextBlock.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center;
+            timeAmPmTextBlock = new TextBlock
+            {
+                Text = displayManager.DateTimeDisplayData.AmPm,
+                FontSize = displayManager.DateTimeDisplayData.TimeFontStyle.FontSize * 0.4,
+                Foreground = displayManager.DateTimeDisplayData.TimeFontStyle.FontForegroundColor,
+                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
+                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
+            };
             Grid.SetColumn(timeAmPmTextBlock, 1);
             Grid.SetRow(timeAmPmTextBlock, 0);
             grid.Children.Add(timeAmPmTextBlock);
+
+            dateTextBlock = new TextBlock
+            {
+                Text = displayManager.DateTimeDisplayData.Date,
+                FontSize = displayManager.DateTimeDisplayData.DateFontStyle.FontSize,
+                Foreground = displayManager.DateTimeDisplayData.DateFontStyle.FontForegroundColor,
+                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right,
+                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top
+            };
+            Grid.SetColumn(dateTextBlock, 0);
+            Grid.SetRow(dateTextBlock, 1);
+            grid.Children.Add(dateTextBlock);
 
             return grid;
         }
