@@ -1,4 +1,6 @@
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -139,9 +141,15 @@ namespace TimeReflector
             Grid.SetRow(tempTextBlock, 2);
             grid.Children.Add(tempTextBlock);
 
+            var toolsPanel = ToolsPanel();
+            Grid.SetColumn(toolsPanel, 2);
+            Grid.SetRow(toolsPanel, 2);
+            grid.Children.Add(toolsPanel);
+
             // Add the grid to the window
             this.Content = grid;
         }
+
 
 
         private Image GetImage(DisplayItem displayItem)
@@ -245,6 +253,29 @@ namespace TimeReflector
             grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(0.5, GridUnitType.Star) });
 
             return grid;
+        }
+
+        private StackPanel ToolsPanel()
+        {
+            var icon = displayManager.Icon("gear.png");
+            icon.Cursor = new Cursor(StandardCursorType.Hand);
+
+            // Subscribe to Click event
+            icon!.PointerPressed += IconClicked;
+
+            // Add to StackPanel or any other container in your UI
+            var stackPanel = new StackPanel();
+            stackPanel.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right;
+            stackPanel.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Bottom;
+            stackPanel.Children.Add(icon);
+
+            return stackPanel;
+
+        }
+
+        private void IconClicked(object sender, PointerPressedEventArgs e)
+        {
+            OpenSettings();
         }
 
         private void DateTimeTextBox_Click(object? sender, Avalonia.Input.PointerPressedEventArgs e)

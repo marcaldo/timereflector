@@ -1,5 +1,6 @@
-﻿using ExifLib;
-using Microsoft.VisualBasic;
+﻿using Avalonia.Controls;
+using Avalonia.Media.Imaging;
+using ExifLib;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -97,6 +98,24 @@ namespace TimeReflector.Data
 
 
             return dateTimeDisplayDataValue;
+        }
+
+        public Image Icon(string iconFileName)
+        {
+            string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+            // Combine the current directory with the relative path to the image directory
+            string imagePath = Path.Combine(currentDirectory, "icons", "gear.png");
+
+            // Create Image control
+            var icon = new Image();
+
+            // Set properties
+            icon.Source = new Bitmap(imagePath); // Set the source to the image path
+            icon.Width = 50;
+            icon.Height = 50;
+
+            return icon;
         }
 
         private static int GetRotation(string imagePath)

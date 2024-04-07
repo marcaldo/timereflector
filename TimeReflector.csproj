@@ -28,6 +28,9 @@
     <None Update="Data\config.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="icons\gear.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Images\superior.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
