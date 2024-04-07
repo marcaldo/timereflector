@@ -132,29 +132,36 @@ namespace TimeReflector.Data
 
         private static int GetRotation(string imagePath)
         {
-            using ExifReader reader = new ExifReader(imagePath);
-            reader.GetTagValue(ExifTags.Orientation, out object orientationValue);
-
-            int.TryParse(orientationValue.ToString(), out int orientation);
-
-            // 1 - Normal - No rotation needed.
-            // 2 - Flipped horizontally.
-            // 3 - Rotated 180 degrees.
-            // 4 - Flipped vertically.
-            // 5 - Flipped horizontally and rotated 270 degrees clockwise.
-            // 6 - Rotated 90 degrees clockwise.
-            // 7 - Flipped horizontally and rotated 90 degrees clockwise.
-            // 8 - Rotated 270 degrees clockwise.
-
-            return orientation switch
+            try
             {
-                3 => 180,
-                5 => 270,
-                6 => 90,
-                7 => 90,
-                8 => 270,
-                _ => 0
-            };
+                using ExifReader reader = new ExifReader(imagePath);
+                reader.GetTagValue(ExifTags.Orientation, out object orientationValue);
+
+                int.TryParse(orientationValue.ToString(), out int orientation);
+
+                // 1 - Normal - No rotation needed.
+                // 2 - Flipped horizontally.
+                // 3 - Rotated 180 degrees.
+                // 4 - Flipped vertically.
+                // 5 - Flipped horizontally and rotated 270 degrees clockwise.
+                // 6 - Rotated 90 degrees clockwise.
+                // 7 - Flipped horizontally and rotated 90 degrees clockwise.
+                // 8 - Rotated 270 degrees clockwise.
+
+                return orientation switch
+                {
+                    3 => 180,
+                    5 => 270,
+                    6 => 90,
+                    7 => 90,
+                    8 => 270,
+                    _ => 0
+                };
+            }
+            catch 
+            {
+                return 0;
+            }
         }
     }
 }

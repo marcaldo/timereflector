@@ -9,6 +9,7 @@ namespace TimeReflector.Data
         public UnitSystemType UnitSystem { get; set; } = UnitSystemType.Metric;
         public DateTimeFormat DateTimeFormat { get; set; } = new();
         public Weather Weather { get; set; } = new();
+        public Duration Duration { get; set; } = new();
     }
 
     public sealed class Weather
@@ -18,12 +19,26 @@ namespace TimeReflector.Data
         public bool UseCity { get; set; } = false;
     }
 
-    public  class DateTimeFormat 
+    public sealed class Duration()
+    {
+        /// <summary>
+        /// Seconds a display item is displayed.
+        /// </summary>
+        public int DisplaySeconds { get; set; } = 5;
+
+        /// <summary>
+        /// Minutes between weather API calls to retireve the weather.
+        /// </summary>
+        public int WheatherMinutes { get; set; } = 30;
+    }
+
+
+    public class DateTimeFormat
     {
         public TimeFormatType TimeFormat { get; set; } = TimeFormatType.T12hs;
         public DateFormatType DateFormat { get; set; } = DateFormatType.Date1_xWD_M_D;
-        public FontStyle TimeFontStyle { get; set; } =new FontStyle { FontSize = 100 };
-        public FontStyle DateFontStyle { get; set; }   = new FontStyle { FontSize = 45 };   
+        public FontStyle TimeFontStyle { get; set; } = new FontStyle { FontSize = 100 };
+        public FontStyle DateFontStyle { get; set; } = new FontStyle { FontSize = 45 };
 
     }
 

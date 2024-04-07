@@ -42,17 +42,17 @@ namespace TimeReflector
         private void SetupTimers()
         {
             timerDisplay = new Timer();
-            timerDisplay.Interval = 5000;
+            timerDisplay.Interval = settingsManager.Configuration.Duration.DisplaySeconds.ToMilisecondsSeconds(TimeConversionType.FromSeconds);
             timerDisplay.AutoReset = true;
             timerDisplay.Elapsed += TimerElapsed;
 
             timerTemp = new Timer();
-            timerTemp.Interval = 10000;
+            timerTemp.Interval = settingsManager.Configuration.Duration.WheatherMinutes.ToMilisecondsSeconds(TimeConversionType.FromSeconds);
             timerTemp.AutoReset = true;
             timerTemp.Elapsed += TimerTempElapsed;
 
             timerDateTime = new Timer();
-            timerDateTime.Interval = 1000;
+            timerDateTime.Interval = 1000 ;
             timerDateTime.AutoReset = true;
             timerDateTime.Elapsed += TimerDateTimeElapsed;
         }
@@ -61,12 +61,13 @@ namespace TimeReflector
         {
 
             timerDisplay.Stop();
+            timerTemp.Stop();
 
-            // Set the new interval
-            timerDisplay.Interval = 1000;
+            timerDisplay.Interval = settingsManager.Configuration.Duration.DisplaySeconds.ToMilisecondsSeconds(TimeConversionType.FromSeconds);
+            timerTemp.Interval = settingsManager.Configuration.Duration.WheatherMinutes.ToMilisecondsSeconds(TimeConversionType.FromMinutes);
 
-            // Restart the timer
             timerDisplay.Start();
+            timerTemp.Start();
         }
 
         protected override void OnOpened(EventArgs e)
