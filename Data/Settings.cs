@@ -15,7 +15,7 @@ namespace TimeReflector.Data
     {
         public TemperatureFormatType TemperatureFormat { get; set; } = TemperatureFormatType.CF;
         public string City { get; set; } = default!;
-        public bool UseCity { get; set; }
+        public bool UseCity { get; set; } = false;
     }
 
     public  class DateTimeFormat 
@@ -30,7 +30,7 @@ namespace TimeReflector.Data
     public class FontStyle
     {
         public int FontSize { get; set; } = 100;
-        public IImmutableBrush FontForegroundColor { get; set; } = Brushes.White;
+        public string FontForegroundColor { get; set; } = "#ffffff";
     }
     public enum UnitSystemType
     {

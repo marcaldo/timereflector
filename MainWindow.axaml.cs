@@ -39,11 +39,6 @@ namespace TimeReflector
             SetupTimer();
         }
 
-        private void AttachEvents()
-        {
-            timeTextBlock.PointerPressed += DateTimeTextBox_Click;
-        }
-
         private void SetupTimer()
         {
             timerDisplay = new Timer();
@@ -71,6 +66,11 @@ namespace TimeReflector
 
             AttachEvents();
 
+        }
+
+        private void AttachEvents()
+        {
+            //timeTextBlock.PointerPressed += DateTimeTextBox_Click;
         }
 
         void TimerElapsed(object sender, ElapsedEventArgs e)
@@ -198,7 +198,7 @@ namespace TimeReflector
             {
                 Text = displayManager.DateTimeDisplayData.Time,
                 FontSize = displayManager.DateTimeDisplayData.TimeFontStyle.FontSize,
-                Foreground = displayManager.DateTimeDisplayData.TimeFontStyle.FontForegroundColor,
+                Foreground = Brush.Parse(displayManager.DateTimeDisplayData.TimeFontStyle.FontForegroundColor),
                 HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right,
                 VerticalAlignment = Avalonia.Layout.VerticalAlignment.Bottom
             };
@@ -210,7 +210,7 @@ namespace TimeReflector
             {
                 Text = displayManager.DateTimeDisplayData.AmPm,
                 FontSize = displayManager.DateTimeDisplayData.TimeFontStyle.FontSize * 0.4,
-                Foreground = displayManager.DateTimeDisplayData.TimeFontStyle.FontForegroundColor,
+                Foreground = Brush.Parse(displayManager.DateTimeDisplayData.TimeFontStyle.FontForegroundColor),
                 HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
                 VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
             };
@@ -222,7 +222,7 @@ namespace TimeReflector
             {
                 Text = displayManager.DateTimeDisplayData.Date,
                 FontSize = displayManager.DateTimeDisplayData.DateFontStyle.FontSize,
-                Foreground = displayManager.DateTimeDisplayData.DateFontStyle.FontForegroundColor,
+                Foreground = Brush.Parse(displayManager.DateTimeDisplayData.DateFontStyle.FontForegroundColor),
                 HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right,
                 VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top
             };
@@ -274,11 +274,6 @@ namespace TimeReflector
         }
 
         private void IconClicked(object sender, PointerPressedEventArgs e)
-        {
-            OpenSettings();
-        }
-
-        private void DateTimeTextBox_Click(object? sender, Avalonia.Input.PointerPressedEventArgs e)
         {
             OpenSettings();
         }

@@ -22,10 +22,22 @@ namespace TimeReflector.Data
 
         private Settings LoadSettings()
         {
+            if (!File.Exists(ConfigFile))
+            {
+                CreateConfigFile();
+            }
+
             string jsonString = File.ReadAllText(ConfigFile);
             var settings = JsonSerializer.Deserialize<Settings>(jsonString);
 
             return settings ?? new Settings();
+        }
+
+        private void CreateConfigFile()
+        {
+            Configuration = new Settings();
+            Configuration.AlbumsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images_default");
+            SaveSettings();
         }
     }
 }
