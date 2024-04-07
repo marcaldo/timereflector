@@ -1,6 +1,7 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using System;
 using TimeReflector.Data;
 
 namespace TimeReflector
@@ -45,5 +46,17 @@ namespace TimeReflector
             albumTextBox!.Text = configuration?.AlbumsPath;
 
         }
+
+        public string Result { get; private set; }
+        public event EventHandler<string> DialogClosed;
+        private void CloseDialog_Click(object sender, RoutedEventArgs e)
+        {
+            // Set the result before closing the dialog
+            Result = "Value from dialog";
+            DialogClosed?.Invoke(this, Result);
+            Close();
+        }
+
+
     }
 }

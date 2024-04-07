@@ -1,6 +1,6 @@
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -14,8 +14,8 @@ namespace TimeReflector
 {
     public partial class MainWindow : Window
     {
-        private readonly DisplayManager displayManager = new();
-        private readonly SettingsManager settingsManager = new();
+        private DisplayManager displayManager = new();
+        private SettingsManager settingsManager = new();
 
         private TextBlock timeTextBlock = new();
         private TextBlock timeAmPmTextBlock = new();
@@ -36,10 +36,10 @@ namespace TimeReflector
             AvaloniaXamlLoader.Load(this);
 
             RunDisplay();
-            SetupTimer();
+            SetupTimers();
         }
 
-        private void SetupTimer()
+        private void SetupTimers()
         {
             timerDisplay = new Timer();
             timerDisplay.Interval = 5000;
@@ -55,6 +55,18 @@ namespace TimeReflector
             timerDateTime.Interval = 1000;
             timerDateTime.AutoReset = true;
             timerDateTime.Elapsed += TimerDateTimeElapsed;
+        }
+
+        private void ResetTimers()
+        {
+
+            timerDisplay.Stop();
+
+            // Set the new interval
+            timerDisplay.Interval = 1000;
+
+            // Restart the timer
+            timerDisplay.Start();
         }
 
         protected override void OnOpened(EventArgs e)
@@ -261,7 +273,7 @@ namespace TimeReflector
             icon.Cursor = new Cursor(StandardCursorType.Hand);
 
             // Subscribe to Click event
-            icon!.PointerPressed += IconClicked;
+            icon!.PointerPressed += OpenDialog_Click;
 
             // Add to StackPanel or any other container in your UI
             var stackPanel = new StackPanel();
@@ -273,15 +285,18 @@ namespace TimeReflector
 
         }
 
-        private void IconClicked(object sender, PointerPressedEventArgs e)
-        {
-            OpenSettings();
-        }
-
-        private void OpenSettings()
+        private async void OpenDialog_Click(object sender, RoutedEventArgs e)
         {
             var settingsWindow = new SettingsWindow();
-            settingsWindow.Show();
+            await settingsWindow.ShowDialog(this);
+
+            displayManager.ClearItemList();
+
+            settingsManager.Configuration = settingsManager.ReLoadSettings();
+
+            ResetTimers();
+
         }
+
     }
 }

@@ -8,10 +8,13 @@ namespace TimeReflector.Data
     {
         public Settings Configuration { get; set; }
         readonly string ConfigFile = default!;
+        public static string DefaultAlbumsPath { get; private set; }
 
         public SettingsManager()
         {
-            ConfigFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "config.json");
+            ConfigFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.json");
+            DefaultAlbumsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images_default");
+
             Configuration = LoadSettings();
         }
         public void SaveSettings()
@@ -20,24 +23,51 @@ namespace TimeReflector.Data
             File.WriteAllText(ConfigFile, jsonSettings);
         }
 
+        public Settings ReLoadSettings()
+        {
+            Configuration = LoadSettings();
+            return Configuration;
+        }
+
+        public Settings ResetConfiguration()
+        {
+            var configFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.json");
+
+            File.Delete(configFile);
+
+            return ReLoadSettings();
+        }
+
         private Settings LoadSettings()
+        {
+            try
+            {
+                return LoadFromFile();
+            }
+            catch (Exception)
+            {
+                EnsureConfigFileExists();
+                return LoadFromFile();
+            }
+
+            Settings LoadFromFile()
+            {
+                string jsonString = File.ReadAllText(ConfigFile);
+                var settings = JsonSerializer.Deserialize<Settings>(jsonString);
+
+                return settings!;
+            }
+        }
+
+        private void EnsureConfigFileExists()
         {
             if (!File.Exists(ConfigFile))
             {
-                CreateConfigFile();
+                Configuration = new();
+                Configuration.AlbumsPath = DefaultAlbumsPath;
+                SaveSettings();
             }
 
-            string jsonString = File.ReadAllText(ConfigFile);
-            var settings = JsonSerializer.Deserialize<Settings>(jsonString);
-
-            return settings ?? new Settings();
-        }
-
-        private void CreateConfigFile()
-        {
-            Configuration = new Settings();
-            Configuration.AlbumsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images_default");
-            SaveSettings();
         }
     }
 }

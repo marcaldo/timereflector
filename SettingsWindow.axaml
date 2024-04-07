@@ -8,10 +8,11 @@
         Title="Settings"
 		ExtendClientAreaToDecorationsHint="True"
 		Background="#333333">
-	<Grid ColumnDefinitions="*, *, *" RowDefinitions="*,*,*"  Margin="4" Background="{DynamicResource BackgroundBrush}">
+	<Grid ColumnDefinitions="*, *, *" RowDefinitions="*,*,*"
+		  Margin="4" Background="{DynamicResource BackgroundBrush}">
 		<StackPanel Margin="20">
 			<TextBlock Margin="0 5" >Album path:</TextBlock>
-			<TextBox x:Name="AlbumTextBox"/>
+			<TextBox x:Name="AlbumTextBox" />
 			<Button Click="ClickHandler">Save</Button>
 		</StackPanel>
 		

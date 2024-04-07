@@ -10,7 +10,13 @@ namespace TimeReflector.Data
 {
     internal class DisplayManager
     {
-        SettingsManager settingsManager = new();
+        SettingsManager settingsManager;
+
+        public DisplayManager()
+        {
+            settingsManager = new();
+            DisplayItems= [];
+        }
 
         private DateTimeDisplayData dateTimeDisplayDataValue = new DateTimeDisplayData();
 
@@ -39,6 +45,12 @@ namespace TimeReflector.Data
             }
 
             return displayItems;
+        }
+
+        public void ClearItemList()
+        {
+            settingsManager = new();
+            DisplayItems.Clear();
         }
 
         public DisplayItem? GetNextItem()
