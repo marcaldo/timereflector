@@ -5,7 +5,7 @@ namespace TimeReflector.Data
     public sealed class Settings
     {
         public string AlbumsPath { get; set; } = default!;
-        public string Album { get; set; } = default!;
+        public string SelectedAlbum { get; set; } = default!;
         public UnitSystemType UnitSystem { get; set; } = UnitSystemType.Metric;
         public DateTimeFormat DateTimeFormat { get; set; } = new();
         public Weather Weather { get; set; } = new();

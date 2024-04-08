@@ -2,19 +2,38 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		xmlns:vm="clr-namespace:TimeReflector.Settings" 
+		xmlns:vm="clr-namespace:TimeReflector.Settings"
 		mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="TimeReflector.SettingsWindow"
         Title="Settings"
 		ExtendClientAreaToDecorationsHint="True"
 		Background="#333333">
-	<Grid ColumnDefinitions="*, *, *" RowDefinitions="*,*,*"
-		  Margin="4" Background="{DynamicResource BackgroundBrush}">
-		<StackPanel Margin="20">
-			<TextBlock Margin="0 5" >Album path:</TextBlock>
-			<TextBox x:Name="AlbumTextBox" />
-			<Button Click="ClickHandler">Save</Button>
-		</StackPanel>
-		
+	<!--<Grid ColumnDefinitions="*, *, *" RowDefinitions="*,*,*"  Margin="4" Background="{DynamicResource BackgroundBrush}">
+		<TextBlock Grid.Row="2" Grid.Column="0" >Album path:</TextBlock>
+		<TextBox x:Name="AlbumTextBox" Grid.Row="2" Grid.Column="1"/>
+		<Button Click="ClickHandler" Grid.Row="2" Grid.Column="0">Apply changes</Button>
+	</Grid>-->
+	<Grid  Margin="10,70,10,10" Background="{DynamicResource BackgroundBrush}">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<!-- Add more rows as needed -->
+		</Grid.RowDefinitions>
+
+		<!-- Labels -->
+		<TextBlock Grid.Row="0" Grid.Column="0" Margin="5" Text="Albums path:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+		<TextBlock  Grid.Row="1" Grid.Column="0" Margin="5" Text="Album to display:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+
+		<!-- Controls -->
+		<TextBox x:Name="AlbumTextBox" Grid.Row="0" Grid.Column="1" Margin="5" VerticalAlignment="Center"/>
+		<ComboBox x:Name="AlbumsComboBox" Grid.Row="1" Grid.Column="1" Margin="5" VerticalAlignment="Center"/>
+		<Button Click="ClickHandler" Grid.Row="2" Grid.Column="1"  Margin="5">Apply changes</Button>
+
 	</Grid>
 </Window>

@@ -2,6 +2,9 @@
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics.Metrics;
+using System.IO;
 using TimeReflector.Data;
 
 namespace TimeReflector
@@ -9,6 +12,9 @@ namespace TimeReflector
     public partial class SettingsWindow : Window
     {
         private TextBox? albumTextBox;
+        private ComboBox albumsComboBox;
+
+
         SettingsManager settingsManager = new();
         Settings configuration = new();
 
@@ -22,15 +28,47 @@ namespace TimeReflector
             AvaloniaXamlLoader.Load(this);
             albumTextBox = this.FindControl<TextBox>("AlbumTextBox");
 
-            configuration = settingsManager.Configuration; 
+            albumsComboBox = this.FindControl<ComboBox>("AlbumsComboBox");
+            albumsComboBox.SelectionChanged += AlbumsComboBox_SelectionChanged;
+
+            configuration = settingsManager.Configuration;
+
+            LoadAlbums();
 
             LoadSettings();
+
+
         }
 
+        private void AlbumsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count > 0)
+            {
+                ComboBoxItem selectedItem = (ComboBoxItem)e.AddedItems[0]!;
+                string selectedValue = (string)selectedItem!.Content!;
 
+                settingsManager.Configuration.SelectedAlbum = selectedValue;
+            }
+        }
         public void ClickHandler(object sender, RoutedEventArgs args)
         {
             SaveSettings();
+        }
+
+        private void LoadAlbums()
+        {
+            var albumPath = settingsManager.Configuration.AlbumsPath;
+            var dirInfo = new DirectoryInfo(albumPath);
+            var albumes = dirInfo.GetDirectories();
+
+            albumsComboBox.IsEnabled = albumes.Length > 0;
+
+            albumsComboBox.Items.Clear();
+            foreach (var directory in albumes)
+            {
+                albumsComboBox.Items.Add(new ComboBoxItem { Content = directory.Name });
+            }
+
         }
 
         private void SaveSettings()
@@ -44,6 +82,8 @@ namespace TimeReflector
         private void LoadSettings()
         {
             albumTextBox!.Text = configuration?.AlbumsPath;
+            albumsComboBox.SelectedItem = "Album";// configuration?.SelectedAlbum;
+            //albumsComboBox.SelectedIndex = 1;
 
         }
 
