@@ -27,6 +27,7 @@ namespace TimeReflector
         {
             AvaloniaXamlLoader.Load(this);
             albumTextBox = this.FindControl<TextBox>("AlbumTextBox");
+            albumTextBox.TextChanged += AlbumTextBox_TextChanged;
 
             albumsComboBox = this.FindControl<ComboBox>("AlbumsComboBox");
             albumsComboBox.SelectionChanged += AlbumsComboBox_SelectionChanged;
@@ -37,8 +38,13 @@ namespace TimeReflector
 
             LoadSettings();
 
-
         }
+
+        private void AlbumTextBox_TextChanged(object? sender, TextChangedEventArgs e)
+        {
+            LoadAlbums();
+        }
+
 
         private void AlbumsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -47,7 +53,7 @@ namespace TimeReflector
                 ComboBoxItem selectedItem = (ComboBoxItem)e.AddedItems[0]!;
                 string selectedValue = (string)selectedItem!.Content!;
 
-                settingsManager.Configuration.SelectedAlbum = selectedValue;
+                configuration.SelectedAlbum = selectedValue;
             }
         }
         public void ClickHandler(object sender, RoutedEventArgs args)
@@ -57,18 +63,37 @@ namespace TimeReflector
 
         private void LoadAlbums()
         {
-            var albumPath = settingsManager.Configuration.AlbumsPath;
-            var dirInfo = new DirectoryInfo(albumPath);
-            var albumes = dirInfo.GetDirectories();
+            var albumsPath = albumTextBox?.Text;
+            if (string.IsNullOrWhiteSpace(albumsPath)) return;
 
-            albumsComboBox.IsEnabled = albumes.Length > 0;
+            var selectedAlbum = configuration.SelectedAlbum;
+            var dirInfo = new DirectoryInfo(albumsPath);
+
+            if(!dirInfo.Exists) return; 
+
+            var albums = dirInfo.GetDirectories();
+            var selectedIndex = 0;
 
             albumsComboBox.Items.Clear();
-            foreach (var directory in albumes)
+
+            albumsComboBox.IsEnabled = albums.Length > 0;
+
+            for (int i = 0; i < albums.Length; i++)
             {
-                albumsComboBox.Items.Add(new ComboBoxItem { Content = directory.Name });
+                bool isSelected = false;
+                var directory = albums[i];
+
+                if (directory.Name.Equals(selectedAlbum, StringComparison.OrdinalIgnoreCase))
+                {
+                    isSelected = true;
+                    selectedIndex = i;
+                }
+
+                albumsComboBox.Items.Add(new ComboBoxItem { Content = directory.Name, IsSelected = isSelected });
+
             }
 
+            albumsComboBox.SelectedIndex = selectedIndex;
         }
 
         private void SaveSettings()
@@ -77,12 +102,13 @@ namespace TimeReflector
             configuration.Weather = new() { TemperatureFormat = TemperatureFormatType.C };
 
             settingsManager.SaveSettings();
+
+            this.Close();
         }
 
         private void LoadSettings()
         {
             albumTextBox!.Text = configuration?.AlbumsPath;
-            albumsComboBox.SelectedItem = "Album";// configuration?.SelectedAlbum;
             //albumsComboBox.SelectedIndex = 1;
 
         }

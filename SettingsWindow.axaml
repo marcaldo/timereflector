@@ -13,7 +13,8 @@
 		<TextBox x:Name="AlbumTextBox" Grid.Row="2" Grid.Column="1"/>
 		<Button Click="ClickHandler" Grid.Row="2" Grid.Column="0">Apply changes</Button>
 	</Grid>-->
-	<Grid  Margin="10,70,10,10" Background="{DynamicResource BackgroundBrush}">
+	<Grid  Margin="10,70,10,10" Background="{DynamicResource BackgroundBrush}"
+		   VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="Auto"/>
 			<ColumnDefinition Width="*"/>
@@ -23,17 +24,22 @@
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
+			
+			<RowDefinition Height="*"/>
 			<!-- Add more rows as needed -->
 		</Grid.RowDefinitions>
 
-		<!-- Labels -->
-		<TextBlock Grid.Row="0" Grid.Column="0" Margin="5" Text="Albums path:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-		<TextBlock  Grid.Row="1" Grid.Column="0" Margin="5" Text="Album to display:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+		<TextBlock Grid.Row="0" Grid.Column="1" Margin="5" Text="Settings" FontSize="40" VerticalAlignment="Top" HorizontalAlignment="Left"/>
 
-		<!-- Controls -->
-		<TextBox x:Name="AlbumTextBox" Grid.Row="0" Grid.Column="1" Margin="5" VerticalAlignment="Center"/>
-		<ComboBox x:Name="AlbumsComboBox" Grid.Row="1" Grid.Column="1" Margin="5" VerticalAlignment="Center"/>
-		<Button Click="ClickHandler" Grid.Row="2" Grid.Column="1"  Margin="5">Apply changes</Button>
+		<TextBlock Grid.Row="1" Grid.Column="0" Margin="5" Text="Albums path:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+		<TextBox x:Name="AlbumTextBox" Grid.Row="1" Grid.Column="1" Margin="5" VerticalAlignment="Center"/>
 
+		<TextBlock  Grid.Row="2" Grid.Column="0" Margin="5" Text="Album to display:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+		<ComboBox x:Name="AlbumsComboBox" Grid.Row="2" Grid.Column="1" Margin="5" VerticalAlignment="Center"/>
+		
+		<StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1">
+			<Button Click="ClickHandler" Margin="1">Apply changes</Button>
+			<Button Click="ClickHandler" Margin="35">Cancel</Button>
+		</StackPanel>
 	</Grid>
 </Window>

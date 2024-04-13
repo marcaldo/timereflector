@@ -31,11 +31,17 @@
     <None Update="icons\gear.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="images_default\superior.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="images_default\timereflection1.jpeg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="images_default\vertical.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="images_default\timereflection2.jpeg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="images_default\timereflection3.jpeg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="images_default\timereflection4.jpeg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 </Project>

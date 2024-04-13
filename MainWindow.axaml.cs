@@ -44,22 +44,21 @@ namespace TimeReflector
             timerDisplay = new Timer();
             timerDisplay.Interval = settingsManager.Configuration.Duration.DisplaySeconds.ToMilisecondsSeconds(TimeConversionType.FromSeconds);
             timerDisplay.AutoReset = true;
-            timerDisplay.Elapsed += TimerElapsed;
+            timerDisplay.Elapsed += TimerElapsed!;
 
             timerTemp = new Timer();
             timerTemp.Interval = settingsManager.Configuration.Duration.WheatherMinutes.ToMilisecondsSeconds(TimeConversionType.FromSeconds);
             timerTemp.AutoReset = true;
-            timerTemp.Elapsed += TimerTempElapsed;
+            timerTemp.Elapsed += TimerTempElapsed!;
 
             timerDateTime = new Timer();
-            timerDateTime.Interval = 1000 ;
+            timerDateTime.Interval = 1000;
             timerDateTime.AutoReset = true;
-            timerDateTime.Elapsed += TimerDateTimeElapsed;
+            timerDateTime.Elapsed += TimerDateTimeElapsed!;
         }
 
         private void ResetTimers()
         {
-
             timerDisplay.Stop();
             timerTemp.Stop();
 
@@ -78,12 +77,12 @@ namespace TimeReflector
             timerDateTime.Start();
 
             AttachEvents();
-
         }
 
         private void AttachEvents()
         {
             //timeTextBlock.PointerPressed += DateTimeTextBox_Click;
+
         }
 
         void TimerElapsed(object sender, ElapsedEventArgs e)
@@ -114,21 +113,30 @@ namespace TimeReflector
 
         private void RunDisplay()
         {
+            bool useAppDefaultImagePath = false;
+
             var displayItem = displayManager.GetNextItem();
 
             if (displayItem is null) // No items in the album.
             {
-                timerDisplay.Stop();
+                var picNumber = "1";// new Random().Next(1,5);
+                displayItem = new()
+                {
+                    ImageFileName = $"timereflection{picNumber}.jpeg",
+                    IsVideo = false
+                };
+
+                useAppDefaultImagePath = true;
             }
 
-            Display(displayItem!);
+            Display(displayItem!, useAppDefaultImagePath);
         }
 
-        private void Display(DisplayItem displayItem)
+        private void Display(DisplayItem displayItem, bool useAppDefaultImagePath)
         {
             Grid grid = CreateWindowGrid();
 
-            Image image = GetImage(displayItem);
+            Image image = GetImage(displayItem, useAppDefaultImagePath);
 
             // Set the Image control as the content of a Border
             Border imageContainer = new()
@@ -165,12 +173,16 @@ namespace TimeReflector
 
 
 
-        private Image GetImage(DisplayItem displayItem)
+        private Image GetImage(DisplayItem displayItem, bool useAppDefaultImagePath = false)
         {
             var height = this.ClientSize.Height;
 
-            string albumPath = settingsManager.Configuration.AlbumsPath;
+            string albumPath = useAppDefaultImagePath
+                ? Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images_default")
+                : Path.Combine(settingsManager.Configuration.AlbumsPath, settingsManager.Configuration.SelectedAlbum);
+
             string imagePath = Path.Combine(albumPath, displayItem.ImageFileName);
+
 
             // Load the image
             Bitmap image = new(imagePath);

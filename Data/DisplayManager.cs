@@ -15,7 +15,7 @@ namespace TimeReflector.Data
         public DisplayManager()
         {
             settingsManager = new();
-            DisplayItems= [];
+            DisplayItems = [];
         }
 
         private DateTimeDisplayData dateTimeDisplayDataValue = new DateTimeDisplayData();
@@ -24,7 +24,10 @@ namespace TimeReflector.Data
         public DateTimeDisplayData DateTimeDisplayData { get => RefreshDateTimeDisplay(); }
         public List<DisplayItem> GetDisplayItems()
         {
-            var albumPath = settingsManager.Configuration.AlbumsPath;
+            var albumPath = Path.Combine(
+                settingsManager.Configuration.AlbumsPath,
+                settingsManager.Configuration.SelectedAlbum
+                );
 
             var dirInfo = new DirectoryInfo(albumPath);
 
@@ -36,10 +39,15 @@ namespace TimeReflector.Data
             foreach (var file in dirInfo.GetFiles())
             {
                 var rotateValue = GetRotation(file.FullName);
+                var isVideo = file.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase);
+
+                // Currently nos supporting video
+                if (isVideo) { continue; }
+
                 displayItems.Add(new DisplayItem
                 {
                     ImageFileName = file.Name,
-                    IsVideo = !file.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase),
+                    IsVideo = isVideo,
                     Rotate = rotateValue
                 });
             }
@@ -158,7 +166,7 @@ namespace TimeReflector.Data
                     _ => 0
                 };
             }
-            catch 
+            catch
             {
                 return 0;
             }
