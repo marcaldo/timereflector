@@ -2,8 +2,6 @@
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics.Metrics;
 using System.IO;
 using TimeReflector.Data;
 
@@ -13,7 +11,6 @@ namespace TimeReflector
     {
         private TextBox? albumTextBox;
         private ComboBox albumsComboBox;
-
 
         SettingsManager settingsManager = new();
         Settings configuration = new();
@@ -98,8 +95,9 @@ namespace TimeReflector
 
         private void SaveSettings()
         {
-            configuration.AlbumsPath = albumTextBox?.Text ?? "";
-            configuration.Weather = new() { TemperatureFormat = TemperatureFormatType.C };
+            settingsManager.Configuration.AlbumsPath = albumTextBox?.Text ?? "";
+            settingsManager.Configuration.SelectedAlbum = albumsComboBox.SelectionBoxItem?.ToString() ?? "";
+            settingsManager.Configuration.Weather = new() { TemperatureFormat = TemperatureFormatType.None };
 
             settingsManager.SaveSettings();
 
@@ -109,8 +107,6 @@ namespace TimeReflector
         private void LoadSettings()
         {
             albumTextBox!.Text = configuration?.AlbumsPath;
-            //albumsComboBox.SelectedIndex = 1;
-
         }
 
         public string Result { get; private set; }

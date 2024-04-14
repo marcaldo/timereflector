@@ -4,8 +4,8 @@ namespace TimeReflector.Data
 {
     public sealed class Settings
     {
-        public string AlbumsPath { get; set; } = default!;
-        public string SelectedAlbum { get; set; } = default!;
+        public string AlbumsPath { get; set; } = "";
+        public string SelectedAlbum { get; set; } = "";
         public UnitSystemType UnitSystem { get; set; } = UnitSystemType.Metric;
         public DateTimeFormat DateTimeFormat { get; set; } = new();
         public Weather Weather { get; set; } = new();
@@ -15,7 +15,7 @@ namespace TimeReflector.Data
     public sealed class Weather
     {
         public TemperatureFormatType TemperatureFormat { get; set; } = TemperatureFormatType.CF;
-        public string City { get; set; } = default!;
+        public string City { get; set; } = "";
         public bool UseCity { get; set; } = false;
     }
 

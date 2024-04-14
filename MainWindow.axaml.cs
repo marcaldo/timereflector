@@ -284,7 +284,7 @@ namespace TimeReflector
             icon.Cursor = new Cursor(StandardCursorType.Hand);
 
             // Subscribe to Click event
-            icon!.PointerPressed += OpenDialog_Click;
+            icon!.PointerPressed += OpenDialog_Click!;
 
             // Add to StackPanel or any other container in your UI
             var stackPanel = new StackPanel();
@@ -301,12 +301,11 @@ namespace TimeReflector
             var settingsWindow = new SettingsWindow();
             await settingsWindow.ShowDialog(this);
 
-            displayManager.ClearItemList();
-
             settingsManager.Configuration = settingsManager.ReLoadSettings();
 
+            displayManager.ClearItemList();
             ResetTimers();
-
+            RunDisplay();
         }
 
     }

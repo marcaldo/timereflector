@@ -25,8 +25,8 @@ namespace TimeReflector.Data
         public List<DisplayItem> GetDisplayItems()
         {
             var albumPath = Path.Combine(
-                settingsManager.Configuration.AlbumsPath,
-                settingsManager.Configuration.SelectedAlbum
+                settingsManager.Configuration.AlbumsPath ?? "",
+                settingsManager.Configuration.SelectedAlbum ?? ""
                 );
 
             var dirInfo = new DirectoryInfo(albumPath);
@@ -35,21 +35,26 @@ namespace TimeReflector.Data
 
             List<DisplayItem> displayItems = new();
 
+            string fileTypesPattern = "*.jpg|*.jpeg|*.png|*.gif|*.bmp|*.JPG|*.JPEG|*.PNG|*.GIF|*.BMP";
+            string[] patterns = fileTypesPattern.Split('|');
 
-            foreach (var file in dirInfo.GetFiles())
+            foreach (string pattern in patterns)
             {
-                var rotateValue = GetRotation(file.FullName);
-                var isVideo = file.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase);
-
-                // Currently nos supporting video
-                if (isVideo) { continue; }
-
-                displayItems.Add(new DisplayItem
+                foreach (var file in dirInfo.GetFiles(pattern))
                 {
-                    ImageFileName = file.Name,
-                    IsVideo = isVideo,
-                    Rotate = rotateValue
-                });
+                    var rotateValue = GetRotation(file.FullName);
+                    var isVideo = file.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase);
+
+                    // Currently nos supporting video
+                    if (isVideo) { continue; }
+
+                    displayItems.Add(new DisplayItem
+                    {
+                        ImageFileName = file.Name,
+                        IsVideo = isVideo,
+                        Rotate = rotateValue
+                    });
+                }
             }
 
             return ShuflleDisplayList(displayItems);
@@ -70,6 +75,9 @@ namespace TimeReflector.Data
             return displayItems;
         }
 
+        /// <summary>
+        /// Clears the current display list.
+        /// </summary>
         public void ClearItemList()
         {
             settingsManager = new();
@@ -160,7 +168,7 @@ namespace TimeReflector.Data
                 using ExifReader reader = new ExifReader(imagePath);
                 reader.GetTagValue(ExifTags.Orientation, out object orientationValue);
 
-                int.TryParse(orientationValue.ToString(), out int orientation);
+                int.TryParse(orientationValue?.ToString(), out int orientation);
 
                 // 1 - Normal - No rotation needed.
                 // 2 - Flipped horizontally.

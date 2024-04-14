@@ -17,6 +17,7 @@ namespace TimeReflector.Data
 
             Configuration = LoadSettings();
         }
+
         public void SaveSettings()
         {
             string jsonSettings = JsonSerializer.Serialize(Configuration);
@@ -61,7 +62,7 @@ namespace TimeReflector.Data
 
         private void EnsureConfigFileExists()
         {
-            if (!File.Exists(ConfigFile))
+            if (!File.Exists(ConfigFile) || Configuration is null)
             {
                 Configuration = new();
                 Configuration.AlbumsPath = DefaultAlbumsPath;

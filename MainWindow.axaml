@@ -5,25 +5,11 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="TimeReflector.MainWindow"
         Title="TimeReflector"
-		Background="Gray"
+		Background="Black"
 		ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaChromeHints="NoChrome"
         ExtendClientAreaTitleBarHeightHint="-1"
         SystemDecorations="BorderOnly"
 		WindowState = "FullScreen"
 		>
-		<!--<TextBlock x:Name="TimeTextBlock" />-->
-	<!--<grid x:Name="grd" columndefinitions="*, *, *" rowdefinitions="*,*,*"  margin="4" >
-		<textblock
-			x:name="clickablelabel"
-			text="32 °f"
-			horizontalalignment="center"
-			verticalalignment="center"
-			fontsize="70"
-			foreground="white"
-			background="transparent"
-			opacity="1"
-			grid.row="2" grid.column="2"
-			pointerpressed="label_onpointerpressed"/>
-	</grid>-->
 </Window>
