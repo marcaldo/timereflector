@@ -52,6 +52,21 @@ namespace TimeReflector.Data
                 });
             }
 
+            return ShuflleDisplayList(displayItems);
+        }
+
+        private static List<DisplayItem> ShuflleDisplayList(List<DisplayItem> displayItems)
+        {
+            // Implementing Fisher-Yates algorithm
+            Random rng = new Random();
+            int count = displayItems.Count;
+            while (count > 1)
+            {
+                count--;
+                int k = rng.Next(count + 1);
+                (displayItems[count], displayItems[k]) = (displayItems[k], displayItems[count]);
+            }
+
             return displayItems;
         }
 

@@ -152,9 +152,8 @@ namespace TimeReflector
             Grid.SetRow(dateTimeGrid, 2);
             grid.Children.Add(dateTimeGrid);
 
-
             tempTextBlock = new TextBlock();
-            tempTextBlock.Text = "41°F 5°C  ";
+            tempTextBlock.Text = "";
             tempTextBlock.FontSize = 100;
             tempTextBlock.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right;
             tempTextBlock.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center;
@@ -170,7 +169,6 @@ namespace TimeReflector
             // Add the grid to the window
             this.Content = grid;
         }
-
 
 
         private Image GetImage(DisplayItem displayItem, bool useAppDefaultImagePath = false)

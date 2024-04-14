@@ -27,10 +27,10 @@ namespace TimeReflector
         {
             AvaloniaXamlLoader.Load(this);
             albumTextBox = this.FindControl<TextBox>("AlbumTextBox");
-            albumTextBox.TextChanged += AlbumTextBox_TextChanged;
+            albumTextBox!.TextChanged += AlbumTextBox_TextChanged;
 
-            albumsComboBox = this.FindControl<ComboBox>("AlbumsComboBox");
-            albumsComboBox.SelectionChanged += AlbumsComboBox_SelectionChanged;
+            albumsComboBox = this.FindControl<ComboBox>("AlbumsComboBox")!;
+            albumsComboBox!.SelectionChanged += AlbumsComboBox_SelectionChanged!;
 
             configuration = settingsManager.Configuration;
 
