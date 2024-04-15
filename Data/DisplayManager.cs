@@ -57,22 +57,7 @@ namespace TimeReflector.Data
                 }
             }
 
-            return ShuflleDisplayList(displayItems);
-        }
-
-        private static List<DisplayItem> ShuflleDisplayList(List<DisplayItem> displayItems)
-        {
-            // Implementing Fisher-Yates algorithm
-            Random rng = new Random();
-            int count = displayItems.Count;
-            while (count > 1)
-            {
-                count--;
-                int k = rng.Next(count + 1);
-                (displayItems[count], displayItems[k]) = (displayItems[k], displayItems[count]);
-            }
-
-            return displayItems;
+            return ShuffleDisplayList(displayItems);
         }
 
         /// <summary>
@@ -161,6 +146,21 @@ namespace TimeReflector.Data
             return icon;
         }
 
+        private static List<DisplayItem> ShuffleDisplayList(List<DisplayItem> displayItems)
+        {
+            // Implementing Fisher-Yates algorithm.
+            Random rng = new();       
+
+            int count = displayItems.Count;
+            while (count > 1)
+            {
+                count--;
+                int k = rng.Next(count + 1);
+                (displayItems[count], displayItems[k]) = (displayItems[k], displayItems[count]);
+            }
+
+            return displayItems;
+        }
         private static int GetRotation(string imagePath)
         {
             try

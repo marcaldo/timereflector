@@ -82,7 +82,6 @@ namespace TimeReflector
         private void AttachEvents()
         {
             //timeTextBlock.PointerPressed += DateTimeTextBox_Click;
-
         }
 
         void TimerElapsed(object sender, ElapsedEventArgs e)
