@@ -8,7 +8,7 @@
         Title="Settings"
 		ExtendClientAreaToDecorationsHint="True"
 		Background="#333333" Foreground="WhiteSmoke">
-	<Grid Margin="10,70,10,10" Background="{DynamicResource BackgroundBrush}"
+	<Grid Margin="10,10,10,10" Background="{DynamicResource BackgroundBrush}"
 		   VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="Auto"/>
@@ -20,25 +20,36 @@
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
 
 			<RowDefinition Height="*"/>
-			<!-- Add more rows as needed -->
 		</Grid.RowDefinitions>
 
-		<TextBlock Grid.Row="0" Grid.Column="1" Margin="5" Text="Settings" FontSize="40" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+		<TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="Settings" Margin="30,5,0,20" FontSize="30" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+		<TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="-- Pictures Display" Margin="75,0,0,10" FontSize="25" VerticalAlignment="Top" HorizontalAlignment="Left"/>
 
-		<TextBlock Grid.Row="1" Grid.Column="0" Margin="5" Text="Albums path:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-		<TextBox x:Name="AlbumTextBox" Grid.Row="1" Grid.Column="1" Margin="5" VerticalAlignment="Center"/>
+		<TextBlock Grid.Row="3" Grid.Column="0" Margin="5" Text="Albums path:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+		<TextBox x:Name="AlbumTextBox" Grid.Row="3" Grid.Column="1" Margin="5" VerticalAlignment="Center"/>
 
-		<TextBlock  Grid.Row="2" Grid.Column="0" Margin="5" Text="Album to display:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-		<ComboBox x:Name="AlbumsComboBox" Grid.Row="2" Grid.Column="1" Margin="5" VerticalAlignment="Center"/>
+		<TextBlock  Grid.Row="4" Grid.Column="0" Margin="5" Text="Album to display:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+		<ComboBox x:Name="AlbumsComboBox" Grid.Row="4" Grid.Column="1" Margin="5" VerticalAlignment="Center"/>
 
-		<TextBlock  Grid.Row="3" Grid.Column="0" Margin="5" Text="Display time:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-		<ComboBox x:Name="DisplayTimeComboBox" Grid.Row="3" Grid.Column="1" Margin="5" VerticalAlignment="Center"/>
+		<TextBlock  Grid.Row="5" Grid.Column="0" Margin="5" Text="Display time:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+		<ComboBox x:Name="DisplayTimeComboBox" Grid.Row="5" Grid.Column="1" Margin="5" VerticalAlignment="Center"/>
+
+		<TextBlock Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Text="-- Weather" Margin="75,20,0,10" FontWeight="Normal" FontSize="25" VerticalAlignment="Top" HorizontalAlignment="Left"/>
 
 
-
-		<StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="1">
+		
+		<StackPanel Orientation="Horizontal" Grid.Row="12" Grid.Column="1">
 			<Button Click="ClickHandler" Margin="1" Background="Green" Foreground="White">Apply changes</Button>
 			<Button Click="ClickHandler" Margin="35" Background="Gray" Foreground="White">Cancel</Button>
 		</StackPanel>

@@ -1,6 +1,4 @@
-﻿using Avalonia.Media;
-
-namespace TimeReflector.Data
+﻿namespace TimeReflector.Data
 {
     public sealed class Settings
     {
@@ -16,7 +14,6 @@ namespace TimeReflector.Data
     {
         public TemperatureFormatType TemperatureFormat { get; set; } = TemperatureFormatType.CF;
         public string City { get; set; } = "";
-        public bool UseCity { get; set; } = false;
     }
 
     public sealed class Duration()
@@ -42,7 +39,7 @@ namespace TimeReflector.Data
 
     }
 
-    public class FontStyle
+    public sealed class FontStyle
     {
         public int FontSize { get; set; } = 100;
         public string FontForegroundColor { get; set; } = "#ffffff";

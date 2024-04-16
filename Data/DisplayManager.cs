@@ -31,7 +31,7 @@ namespace TimeReflector.Data
 
             var dirInfo = new DirectoryInfo(albumPath);
 
-            if (!dirInfo.Exists) { return new List<DisplayItem>(); }
+            if (!dirInfo.Exists) { return []; }
 
             List<DisplayItem> displayItems = new();
 
@@ -128,20 +128,32 @@ namespace TimeReflector.Data
             return dateTimeDisplayDataValue;
         }
 
-        public Image Icon(string iconFileName)
+        /// <summary>
+        /// Image to use as icon.
+        /// </summary>
+        /// <param name="iconFileName">Image file name.</param>
+        /// <param name="width">Width in pixels. If this is defined and <paramref name="height"/> 
+        /// is not, it will set the image as squared. Default is value 30</param>
+        /// <param name="height">Height in pixels. If this is defined and <paramref name="width"/> 
+        /// is not, it will set the image as squared. Default is value 30</param>
+        /// <returns></returns>
+        public Image Icon(string iconFileName, double? width = null, double? height = null)
         {
             string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
             // Combine the current directory with the relative path to the image directory
-            string imagePath = Path.Combine(currentDirectory, "icons", "gear.png");
+            string imagePath = Path.Combine(currentDirectory, "icons", iconFileName);
 
             // Create Image control
             var icon = new Image();
 
             // Set properties
+            double iconWidth = width ?? height ?? 30;
+            double iconHeight = height ?? width ?? 30;
+
             icon.Source = new Bitmap(imagePath); // Set the source to the image path
-            icon.Width = 50;
-            icon.Height = 50;
+            icon.Width = iconWidth;
+            icon.Height = iconHeight;
 
             return icon;
         }
@@ -149,7 +161,7 @@ namespace TimeReflector.Data
         private static List<DisplayItem> ShuffleDisplayList(List<DisplayItem> displayItems)
         {
             // Implementing Fisher-Yates algorithm.
-            Random rng = new();       
+            Random rng = new();
 
             int count = displayItems.Count;
             while (count > 1)

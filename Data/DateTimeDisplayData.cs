@@ -1,6 +1,4 @@
-﻿using Avalonia.Media;
-
-namespace TimeReflector.Data
+﻿namespace TimeReflector.Data
 {
     public class DateTimeDisplayData : DateTimeFormat
     {
