@@ -2,6 +2,7 @@
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using TimeReflector.Data;
 
@@ -11,6 +12,7 @@ namespace TimeReflector
     {
         private TextBox? albumTextBox;
         private ComboBox albumsComboBox;
+        private ComboBox displayTimeComboBox;
 
         SettingsManager settingsManager = new();
         Settings configuration = new();
@@ -29,9 +31,14 @@ namespace TimeReflector
             albumsComboBox = this.FindControl<ComboBox>("AlbumsComboBox")!;
             albumsComboBox!.SelectionChanged += AlbumsComboBox_SelectionChanged!;
 
+            displayTimeComboBox = this.FindControl<ComboBox>("DisplayTimeComboBox")!;
+            displayTimeComboBox!.SelectionChanged += DisplayTimeComboBox_SelectionChanged;
+
+
             configuration = settingsManager.Configuration;
 
-            LoadAlbums();
+            LoadAlbumsList();
+            PopulateDisplayTimeComboBox();
 
             LoadSettings();
 
@@ -39,9 +46,16 @@ namespace TimeReflector
 
         private void AlbumTextBox_TextChanged(object? sender, TextChangedEventArgs e)
         {
-            LoadAlbums();
+            LoadAlbumsList();
         }
 
+        private void DisplayTimeComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+        {
+            ComboBoxItem selectedItem = (ComboBoxItem)e.AddedItems[0]!;
+            int selectedValue = (int)selectedItem!.DataContext!;
+
+            configuration.Duration.DisplaySeconds = selectedValue;
+        }
 
         private void AlbumsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -58,7 +72,7 @@ namespace TimeReflector
             SaveSettings();
         }
 
-        private void LoadAlbums()
+        private void LoadAlbumsList()
         {
             var albumsPath = albumTextBox?.Text;
             if (string.IsNullOrWhiteSpace(albumsPath)) return;
@@ -66,7 +80,7 @@ namespace TimeReflector
             var selectedAlbum = configuration.SelectedAlbum;
             var dirInfo = new DirectoryInfo(albumsPath);
 
-            if(!dirInfo.Exists) return; 
+            if (!dirInfo.Exists) return;
 
             var albums = dirInfo.GetDirectories();
             var selectedIndex = 0;
@@ -91,6 +105,58 @@ namespace TimeReflector
             }
 
             albumsComboBox.SelectedIndex = selectedIndex;
+        }
+
+        private void PopulateDisplayTimeComboBox()
+        {
+            displayTimeComboBox.Items.Clear();
+
+            int currentInterval = configuration.Duration.DisplaySeconds;
+
+
+            displayTimeComboBox.SelectedIndex = 1;
+
+            List<ComboBoxItem> displayTimeComboBoxItems = new List<ComboBoxItem>()
+            {
+                    new() { DataContext = 5, Content = "5 seconds" },
+                    new() { DataContext = 10, Content = "10 seconds" },
+                    new() { DataContext = 15, Content = "15 seconds" },
+                    new() { DataContext = 20, Content = "20 seconds" },
+                    new() { DataContext = 30, Content = "30 seconds" },
+                    new() { DataContext = 45, Content = "45 seconds" },
+                    new() { DataContext = 60, Content = "1 minute" },
+                    new() { DataContext = 90, Content = "1.5 minutes" },
+                    new() { DataContext = 120, Content = "2 minutes" },
+                    new() { DataContext = 180, Content = "3 minutes" },
+                    new() { DataContext = 240, Content = "4 minutes" },
+                    new() { DataContext = 300, Content = "5 minutes" },
+                    new() { DataContext = 420, Content = "7 minutes" },
+                    new() { DataContext = 600, Content = "10 minutes" },
+                    new() { DataContext = 900, Content = "15 minutes" },
+                    new() { DataContext = 1200, Content = "20 minutes" },
+                    new() { DataContext = 1800, Content = "30 minutes" },
+                    new() { DataContext = 2700, Content = "45 minutes" },
+                    new() { DataContext = 3600, Content = "1 hour" },
+                    new() { DataContext = 7200, Content = "2 hours" },
+                    new() { DataContext = 10800, Content = "3 hours" },
+                    new() { DataContext = 21600, Content = "6 hours" },
+                    new() { DataContext = 43200, Content = "12 hours" },
+                    new() { DataContext = 86400, Content = "24 hours" }
+            };
+
+
+            int selectedIndex = 0;
+
+            for (int i = 0; i < displayTimeComboBoxItems.Count; i++)
+            {
+                var displayTimeItem = displayTimeComboBoxItems[i];
+                displayTimeComboBox.Items.Add(displayTimeItem);
+
+                if (((int)displayTimeItem.DataContext!) == configuration.Duration.DisplaySeconds)
+                    selectedIndex = i;
+            }
+
+            displayTimeComboBox.SelectedIndex = selectedIndex;
         }
 
         private void SaveSettings()
@@ -119,6 +185,11 @@ namespace TimeReflector
             Close();
         }
 
+        //public sealed class ComboBoxItem : ListBoxItem
+        //{
+        //    public int Value { get; set; }
+        //    public string DisplayText { get; set; } = "";
+        //}
 
     }
 }
