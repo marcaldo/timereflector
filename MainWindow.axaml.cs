@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -216,17 +217,41 @@ namespace TimeReflector
             grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Star) });
             grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(0.5, GridUnitType.Star) });
 
+            var timeText = displayManager.DateTimeDisplayData.Time;
+
+            var canvas = new Canvas { Margin = new Thickness(45) };
+
+            var timeTextBlockBckg = new TextBlock
+            {
+                Text = timeText,
+                FontSize = displayManager.DateTimeDisplayData.TimeFontStyle.FontSize,
+                Foreground = Brush.Parse("#000000"),
+                Margin = Thickness.Parse("2"),
+                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
+            };
+
+            canvas.Children.Add(timeTextBlockBckg);
+
             timeTextBlock = new TextBlock
             {
-                Text = displayManager.DateTimeDisplayData.Time,
+                Text = timeText,
                 FontSize = displayManager.DateTimeDisplayData.TimeFontStyle.FontSize,
                 Foreground = Brush.Parse(displayManager.DateTimeDisplayData.TimeFontStyle.FontForegroundColor),
-                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right,
-                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Bottom
+                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
             };
-            Grid.SetColumn(timeTextBlock, 0);
-            Grid.SetRow(timeTextBlock, 0);
-            grid.Children.Add(timeTextBlock);
+
+            canvas.Children.Add(timeTextBlock);
+
+            Canvas.SetLeft(timeTextBlockBckg, 0);
+            Canvas.SetTop(timeTextBlockBckg, 0);
+            Canvas.SetLeft(timeTextBlock, 0);
+            Canvas.SetTop(timeTextBlock, 0);
+
+            Grid.SetColumn(canvas, 0);
+            Grid.SetRow(canvas, 0);
+            grid.Children.Add(canvas);
 
             timeAmPmTextBlock = new TextBlock
             {
