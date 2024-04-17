@@ -195,7 +195,10 @@ namespace TimeReflector
                 Child = backgroundImage
             };
 
-            if (image.Size.Width > image.Size.Height && (image.Size.Width / image.Size.Height) > 1.5)
+            var minRatio = 1.5;
+            var imageRatio = image.Size.Width / image.Size.Height;
+
+            if (image.Size.Width > image.Size.Height && imageRatio > minRatio)
             {
                 imageContainer.Height = viewPortHeight;
                 imageContainer.Width = viewPortWidth;
