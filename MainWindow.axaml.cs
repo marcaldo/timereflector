@@ -136,13 +136,7 @@ namespace TimeReflector
         {
             Grid grid = CreateWindowGrid();
 
-            Image image = GetImage(displayItem, useAppDefaultImagePath);
-
-            // Set the Image control as the content of a Border
-            Border imageContainer = new()
-            {
-                Child = image
-            };
+            Border imageContainer = GetImageContainer(displayItem, useAppDefaultImagePath);
 
             // Set the Border as the background of the grid
             grid.Background = new VisualBrush { Visual = imageContainer };
@@ -171,9 +165,10 @@ namespace TimeReflector
         }
 
 
-        private Image GetImage(DisplayItem displayItem, bool useAppDefaultImagePath = false)
+        private Border GetImageContainer(DisplayItem displayItem, bool useAppDefaultImagePath = false)
         {
-            var height = this.ClientSize.Height;
+            double viewPortHeight = this.ClientSize.Height;
+            double viewPortWidth = this.ClientSize.Width;
 
             string albumPath = useAppDefaultImagePath
                 ? Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images_default")
@@ -181,25 +176,32 @@ namespace TimeReflector
 
             string imagePath = Path.Combine(albumPath, displayItem.ImageFileName);
 
-
-            // Load the image
             Bitmap image = new(imagePath);
 
             Image backgroundImage = new Image
             {
                 Source = image,
-                Stretch = Stretch.UniformToFill,
-                Height = height
+                Stretch = Stretch.UniformToFill
             };
 
             if (displayItem.Rotate > 0)
             {
-                RotateTransform rotateTransform = new RotateTransform(displayItem.Rotate);
+                RotateTransform rotateTransform = new(displayItem.Rotate);
                 backgroundImage.RenderTransform = rotateTransform;
             }
 
+            Border imageContainer = new()
+            {
+                Child = backgroundImage
+            };
 
-            return backgroundImage;
+            if (image.Size.Width > image.Size.Height)
+            {
+                imageContainer.Height = viewPortHeight;
+                imageContainer.Width = viewPortWidth;
+            }
+
+            return imageContainer;
         }
 
         private Grid DateTimeGrid()

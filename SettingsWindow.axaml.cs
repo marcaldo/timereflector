@@ -116,8 +116,10 @@ namespace TimeReflector
 
             displayTimeComboBox.SelectedIndex = 1;
 
-            List<ComboBoxItem> displayTimeComboBoxItems = new List<ComboBoxItem>()
-            {
+            List<ComboBoxItem> displayTimeComboBoxItems =
+            [
+                    new() { DataContext = 1, Content = "1 second" },
+                    new() { DataContext = 3, Content = "3 seconds" },
                     new() { DataContext = 5, Content = "5 seconds" },
                     new() { DataContext = 10, Content = "10 seconds" },
                     new() { DataContext = 15, Content = "15 seconds" },
@@ -142,7 +144,7 @@ namespace TimeReflector
                     new() { DataContext = 21600, Content = "6 hours" },
                     new() { DataContext = 43200, Content = "12 hours" },
                     new() { DataContext = 86400, Content = "24 hours" }
-            };
+            ];
 
 
             int selectedIndex = 0;
