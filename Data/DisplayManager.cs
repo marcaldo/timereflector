@@ -2,6 +2,7 @@
 using Avalonia.Media.Imaging;
 using ExifLib;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -33,14 +34,18 @@ namespace TimeReflector.Data
 
             if (!dirInfo.Exists) { return []; }
 
-            List<DisplayItem> displayItems = new();
+            //List<DisplayItem> displayItems = new();
 
             string fileTypesPattern = "*.jpg|*.jpeg|*.png|*.gif|*.bmp|*.JPG|*.JPEG|*.PNG|*.GIF|*.BMP";
             string[] patterns = fileTypesPattern.Split('|');
 
+            Hashtable displayItemsDictionary = new();
+
             foreach (string pattern in patterns)
             {
-                foreach (var file in dirInfo.GetFiles(pattern))
+                var files = dirInfo.GetFiles(pattern);
+
+                foreach (var file in files)
                 {
                     var rotateValue = GetRotation(file.FullName);
                     var isVideo = file.Name.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase);
@@ -48,13 +53,27 @@ namespace TimeReflector.Data
                     // Currently nos supporting video
                     if (isVideo) { continue; }
 
-                    displayItems.Add(new DisplayItem
+                    var displayItem = new DisplayItem
                     {
                         ImageFileName = file.Name,
                         IsVideo = isVideo,
                         Rotate = rotateValue
-                    });
+                    };
+
+                    var tmpKey = displayItem.ImageFileName.ToLower();
+
+                    if (!displayItemsDictionary.ContainsKey(tmpKey))
+                    {
+                        displayItemsDictionary.Add(tmpKey, displayItem);
+                    }
                 }
+            }
+
+            List<DisplayItem> displayItems = new();
+
+            foreach (DisplayItem displayItem in displayItemsDictionary.Values)
+            {
+                displayItems.Add(displayItem);
             }
 
             return ShuffleDisplayList(displayItems);
@@ -160,19 +179,27 @@ namespace TimeReflector.Data
 
         private static List<DisplayItem> ShuffleDisplayList(List<DisplayItem> displayItems)
         {
-            // Implementing Fisher-Yates algorithm.
             Random rng = new();
 
-            int count = displayItems.Count;
-            while (count > 1)
+            List<DisplayItem> shuffledList = new List<DisplayItem>(displayItems);
+
+            int n = shuffledList.Count;
+            while (n > 1)
             {
-                count--;
-                int k = rng.Next(count + 1);
-                (displayItems[count], displayItems[k]) = (displayItems[k], displayItems[count]);
+                n--;
+                int k = rng.Next(n + 1);
+
+                DisplayItem value = shuffledList[k];
+                shuffledList[k] = shuffledList[n];
+                shuffledList[n] = value;
             }
 
-            return displayItems;
+            // Remove duplicates
+            shuffledList = shuffledList.Distinct().ToList();
+
+            return shuffledList;
         }
+
         private static int GetRotation(string imagePath)
         {
             try
