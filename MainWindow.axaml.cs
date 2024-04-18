@@ -36,10 +36,18 @@ namespace TimeReflector
         {
             AvaloniaXamlLoader.Load(this);
 
+            Cursor = TransparentCursor();
+
             RunDisplay();
             SetupTimers();
         }
 
+        private Cursor TransparentCursor()
+        {
+            var iconPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icons", "transparent.png");
+            var transparentCursor = new Cursor(new Bitmap(iconPath), new PixelPoint(0, 0));
+            return transparentCursor;
+        }
         private void SetupTimers()
         {
             timerDisplay = new Timer();
@@ -159,6 +167,8 @@ namespace TimeReflector
             Grid.SetColumn(toolsPanel, 2);
             Grid.SetRow(toolsPanel, 2);
             grid.Children.Add(toolsPanel);
+
+            grid.Cursor = TransparentCursor();
 
             // Add the grid to the window
             this.Content = grid;
