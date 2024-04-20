@@ -6,17 +6,20 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 
 namespace TimeReflector.Data
 {
     internal class DisplayManager
     {
-        SettingsManager settingsManager;
+        SettingsManager _settingsManager;
+        readonly string _displayListFile;
 
         public DisplayManager()
         {
-            settingsManager = new();
+            _settingsManager = new();
             DisplayItems = [];
+            _displayListFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "display-list.json");
         }
 
         private DateTimeDisplayData dateTimeDisplayDataValue = new DateTimeDisplayData();
@@ -25,16 +28,18 @@ namespace TimeReflector.Data
         public DateTimeDisplayData DateTimeDisplayData { get => RefreshDateTimeDisplay(); }
         public List<DisplayItem> GetDisplayItems()
         {
+            var storedList = LoadDisplayList();
+            if (storedList is not null) return storedList;
+
             var albumPath = Path.Combine(
-                settingsManager.Configuration.AlbumsPath ?? "",
-                settingsManager.Configuration.SelectedAlbum ?? ""
+                _settingsManager.Configuration.AlbumsPath ?? "",
+                _settingsManager.Configuration.SelectedAlbum ?? ""
                 );
 
             var dirInfo = new DirectoryInfo(albumPath);
 
             if (!dirInfo.Exists) { return []; }
 
-            //List<DisplayItem> displayItems = new();
 
             string fileTypesPattern = "*.jpg|*.jpeg|*.png|*.gif|*.bmp|*.JPG|*.JPEG|*.PNG|*.GIF|*.BMP";
             string[] patterns = fileTypesPattern.Split('|');
@@ -76,7 +81,9 @@ namespace TimeReflector.Data
                 displayItems.Add(displayItem);
             }
 
-            return ShuffleDisplayList(displayItems);
+            var shuffledList = ShuffleDisplayList(displayItems);
+
+            return shuffledList;
         }
 
         /// <summary>
@@ -84,8 +91,10 @@ namespace TimeReflector.Data
         /// </summary>
         public void ClearItemList()
         {
-            settingsManager = new();
+            _settingsManager = new();
             DisplayItems.Clear();
+
+            SaveDisplayList(DisplayItems);
         }
 
         public DisplayItem? GetNextItem()
@@ -98,8 +107,11 @@ namespace TimeReflector.Data
                 displayItem = DisplayItems.FirstOrDefault();
             }
 
-            if (displayItem is not null) DisplayItems.Remove(displayItem);
-
+            if (displayItem is not null)
+            {
+                DisplayItems.Remove(displayItem);
+                SaveDisplayList(DisplayItems);
+            }
             return displayItem;
         }
 
@@ -107,7 +119,7 @@ namespace TimeReflector.Data
         {
             var now = DateTime.Now;
 
-            switch (settingsManager.Configuration.DateTimeFormat.TimeFormat)
+            switch (_settingsManager.Configuration.DateTimeFormat.TimeFormat)
             {
                 case TimeFormatType.None:
                     break;
@@ -122,7 +134,7 @@ namespace TimeReflector.Data
                     break;
             }
 
-            dateTimeDisplayDataValue.Date = settingsManager.Configuration.DateTimeFormat.DateFormat switch
+            dateTimeDisplayDataValue.Date = _settingsManager.Configuration.DateTimeFormat.DateFormat switch
             {
                 DateFormatType.None => "",
                 // Date1: TUE, Set 23
@@ -145,6 +157,23 @@ namespace TimeReflector.Data
 
 
             return dateTimeDisplayDataValue;
+        }
+
+        private void SaveDisplayList(List<DisplayItem> displayItems)
+        {
+            string jsonSettings = JsonSerializer.Serialize(displayItems);
+            File.WriteAllText(_displayListFile, jsonSettings);
+        }
+
+        private List<DisplayItem>? LoadDisplayList()
+        {
+            if (!File.Exists(_displayListFile)) return null;
+
+            string displayListJson = File.ReadAllText(_displayListFile);
+            var displayList = JsonSerializer.Deserialize<List<DisplayItem>>(displayListJson);
+
+            return displayList is not null && displayList.Any() ? displayList : null;
+
         }
 
         /// <summary>
