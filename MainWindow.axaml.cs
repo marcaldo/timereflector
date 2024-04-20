@@ -8,7 +8,6 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using System;
 using System.IO;
-using System.Timers;
 using TimeReflector.Data;
 
 namespace TimeReflector
@@ -18,14 +17,15 @@ namespace TimeReflector
         private DisplayManager displayManager = new();
         private SettingsManager settingsManager = new();
 
+
         private TextBlock timeTextBlock = new();
         private TextBlock timeAmPmTextBlock = new();
         private TextBlock dateTextBlock = new();
         private TextBlock tempTextBlock = new();
 
-        private Timer timerDisplay;
-        private Timer timerTemp;
-        private Timer timerDateTime;
+        private DispatcherTimer _timerDisplay;
+        private DispatcherTimer _timerDateTime;
+        private DispatcherTimer _timerWeather;
 
         public MainWindow()
         {
@@ -40,6 +40,8 @@ namespace TimeReflector
 
             RunDisplay();
             SetupTimers();
+
+
         }
 
         private Cursor TransparentCursor()
@@ -50,40 +52,40 @@ namespace TimeReflector
         }
         private void SetupTimers()
         {
-            timerDisplay = new Timer();
-            timerDisplay.Interval = settingsManager.Configuration.Duration.DisplaySeconds.ToMilisecondsSeconds(TimeConversionType.FromSeconds);
-            timerDisplay.AutoReset = true;
-            timerDisplay.Elapsed += TimerElapsed!;
+            _timerDisplay = new DispatcherTimer();
+            _timerDisplay.Interval = TimeSpan.FromSeconds(settingsManager.Configuration.Duration.DisplaySeconds);
+            _timerDisplay.Tick += TimerDisplay_Tick!;
+            _timerDisplay.Start();
 
-            timerTemp = new Timer();
-            timerTemp.Interval = settingsManager.Configuration.Duration.WheatherMinutes.ToMilisecondsSeconds(TimeConversionType.FromSeconds);
-            timerTemp.AutoReset = true;
-            timerTemp.Elapsed += TimerTempElapsed!;
+            _timerDateTime = new DispatcherTimer();
+            _timerDateTime.Interval = TimeSpan.FromSeconds(1);
+            _timerDateTime.Tick += TimerDateTime_Tick!;
+            _timerDateTime.Start();
 
-            timerDateTime = new Timer();
-            timerDateTime.Interval = 1000;
-            timerDateTime.AutoReset = true;
-            timerDateTime.Elapsed += TimerDateTimeElapsed!;
+            _timerWeather = new DispatcherTimer();
+            _timerWeather.Interval = TimeSpan.FromMinutes(settingsManager.Configuration.Duration.WheatherMinutes);
+            _timerWeather.Tick += TimerDateTime_Tick!;
+            _timerWeather.Start();
         }
 
         private void ResetTimers()
         {
-            timerDisplay.Stop();
-            timerTemp.Stop();
+            _timerDisplay.Stop();
+            _timerWeather.Stop();
 
-            timerDisplay.Interval = settingsManager.Configuration.Duration.DisplaySeconds.ToMilisecondsSeconds(TimeConversionType.FromSeconds);
-            timerTemp.Interval = settingsManager.Configuration.Duration.WheatherMinutes.ToMilisecondsSeconds(TimeConversionType.FromMinutes);
+            _timerDisplay.Interval = TimeSpan.FromSeconds(settingsManager.Configuration.Duration.DisplaySeconds);
+            _timerWeather.Interval = TimeSpan.FromMinutes(settingsManager.Configuration.Duration.WheatherMinutes);
 
-            timerDisplay.Start();
-            timerTemp.Start();
+            _timerDisplay.Start();
+            _timerWeather.Start();
         }
 
         protected override void OnOpened(EventArgs e)
         {
             base.OnOpened(e);
-            timerDisplay.Start();
-            timerTemp.Start();
-            timerDateTime.Start();
+            //timerDisplay.Start();
+            //timerTemp.Start();
+            //timerDateTime.Start();
 
             AttachEvents();
         }
@@ -93,31 +95,21 @@ namespace TimeReflector
             //timeTextBlock.PointerPressed += DateTimeTextBox_Click;
         }
 
-        void TimerElapsed(object sender, ElapsedEventArgs e)
+
+        private void TimerDisplay_Tick(object sender, EventArgs e)
         {
-            Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                RunDisplay();
-            });
+            RunDisplay();
         }
 
-        void TimerTempElapsed(object sender, ElapsedEventArgs e)
+        private void TimerDateTime_Tick(object sender, EventArgs e)
         {
-            Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                timeTextBlock.Text = displayManager.DateTimeDisplayData.Time;
-                timeAmPmTextBlock.Text = displayManager.DateTimeDisplayData.AmPm;
-                dateTextBlock.Text = displayManager.DateTimeDisplayData.Date;
-            });
+            timeTextBlock.Text = displayManager.DateTimeDisplayData.Time;
+            timeAmPmTextBlock.Text = displayManager.DateTimeDisplayData.AmPm;
+            dateTextBlock.Text = displayManager.DateTimeDisplayData.Date;
         }
 
-        void TimerDateTimeElapsed(object sender, ElapsedEventArgs e)
-        {
-            Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                timeTextBlock.Text = displayManager.DateTimeDisplayData.Time;
-            });
-        }
+        private void TimerWeather_Tick(object sender, EventArgs e)
+        { }
 
         private void RunDisplay()
         {
