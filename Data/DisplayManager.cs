@@ -14,18 +14,18 @@ namespace TimeReflector.Data
     {
         SettingsManager _settingsManager;
         readonly string _displayListFile;
+        public static List<DisplayItem> _displayItems { get; set; } = new();
 
         public DisplayManager()
         {
             _settingsManager = new();
-            DisplayItems = [];
+            _displayItems = [];
             _displayListFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "display-list.json");
         }
 
         private DateTimeDisplayData dateTimeDisplayDataValue = new DateTimeDisplayData();
-
-        public static List<DisplayItem> DisplayItems { get; set; } = new();
         public DateTimeDisplayData DateTimeDisplayData { get => RefreshDateTimeDisplay(); }
+
         public List<DisplayItem> GetDisplayItems()
         {
             var storedList = LoadDisplayList();
@@ -44,7 +44,7 @@ namespace TimeReflector.Data
             string fileTypesPattern = "*.jpg|*.jpeg|*.png|*.gif|*.bmp|*.JPG|*.JPEG|*.PNG|*.GIF|*.BMP";
             string[] patterns = fileTypesPattern.Split('|');
 
-            Hashtable displayItemsDictionary = new();
+            Dictionary<string, DisplayItem> displayItemsDictionary = new();
 
             foreach (string pattern in patterns)
             {
@@ -74,14 +74,7 @@ namespace TimeReflector.Data
                 }
             }
 
-            List<DisplayItem> displayItems = new();
-
-            foreach (DisplayItem displayItem in displayItemsDictionary.Values)
-            {
-                displayItems.Add(displayItem);
-            }
-
-            var shuffledList = ShuffleDisplayList(displayItems);
+            var shuffledList = ShuffleDisplayList(displayItemsDictionary.Values.ToList());
 
             return shuffledList;
         }
@@ -92,25 +85,25 @@ namespace TimeReflector.Data
         public void ClearItemList()
         {
             _settingsManager = new();
-            DisplayItems.Clear();
+            _displayItems.Clear();
 
-            SaveDisplayList(DisplayItems);
+            SaveDisplayList(_displayItems);
         }
 
         public DisplayItem? GetNextItem()
         {
-            var displayItem = DisplayItems.FirstOrDefault();
+            DisplayItem? displayItem = _displayItems.FirstOrDefault();
 
             if (displayItem is null)
             {
-                DisplayItems = GetDisplayItems();
-                displayItem = DisplayItems.FirstOrDefault();
+                _displayItems = GetDisplayItems();
+                displayItem = _displayItems.FirstOrDefault();
             }
 
             if (displayItem is not null)
             {
-                DisplayItems.Remove(displayItem);
-                SaveDisplayList(DisplayItems);
+                _displayItems.Remove(displayItem);
+                SaveDisplayList(_displayItems);
             }
             return displayItem;
         }

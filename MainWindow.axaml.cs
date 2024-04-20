@@ -17,7 +17,6 @@ namespace TimeReflector
         private DisplayManager displayManager = new();
         private SettingsManager settingsManager = new();
 
-
         private TextBlock timeTextBlock = new();
         private TextBlock timeAmPmTextBlock = new();
         private TextBlock dateTextBlock = new();
@@ -40,12 +39,12 @@ namespace TimeReflector
 
             RunDisplay();
             SetupTimers();
-
-
         }
 
         private Cursor TransparentCursor()
         {
+            if (System.Diagnostics.Debugger.IsAttached) return Cursor.Default;
+
             var iconPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icons", "transparent.png");
             var transparentCursor = new Cursor(new Bitmap(iconPath), new PixelPoint(0, 0));
             return transparentCursor;
@@ -83,18 +82,7 @@ namespace TimeReflector
         protected override void OnOpened(EventArgs e)
         {
             base.OnOpened(e);
-            //timerDisplay.Start();
-            //timerTemp.Start();
-            //timerDateTime.Start();
-
-            AttachEvents();
         }
-
-        private void AttachEvents()
-        {
-            //timeTextBlock.PointerPressed += DateTimeTextBox_Click;
-        }
-
 
         private void TimerDisplay_Tick(object sender, EventArgs e)
         {
@@ -177,7 +165,6 @@ namespace TimeReflector
                 : Path.Combine(settingsManager.Configuration.AlbumsPath, settingsManager.Configuration.SelectedAlbum);
 
             string imagePath = Path.Combine(albumPath, displayItem.ImageFileName);
-
             Bitmap image = new(imagePath);
 
             Image backgroundImage = new Image
