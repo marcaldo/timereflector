@@ -8,11 +8,13 @@ namespace TimeReflector.Data
     {
         public Settings Configuration { get; set; }
         readonly string ConfigFile = default!;
-        public static string DefaultAlbumsPath { get; private set; }
+        public static string DefaultAlbumsPath { get; private set; } = default!;
+
+        private const string  _configFileName = "config.json";
 
         public SettingsManager()
         {
-            ConfigFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.json");
+            ConfigFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, _configFileName);
             DefaultAlbumsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images_default");
 
             Configuration = LoadSettings();
@@ -32,7 +34,7 @@ namespace TimeReflector.Data
 
         public Settings ResetConfiguration()
         {
-            var configFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.json");
+            var configFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, _configFileName);
 
             File.Delete(configFile);
 

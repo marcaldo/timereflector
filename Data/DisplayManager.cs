@@ -2,7 +2,6 @@
 using Avalonia.Media.Imaging;
 using ExifLib;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,18 +11,17 @@ namespace TimeReflector.Data
 {
     internal class DisplayManager
     {
-        SettingsManager _settingsManager;
-        readonly string _displayListFile;
-        public static List<DisplayItem> _displayItems { get; set; } = new();
+        private readonly string _displayListFile;
+        //private List<DisplayItem> _displayItems = [];
+        private DateTimeDisplayData dateTimeDisplayDataValue = new DateTimeDisplayData();
+        public SettingsManager SettingsManager { get; init; }
 
         public DisplayManager()
         {
-            _settingsManager = new();
-            _displayItems = [];
+            SettingsManager = new();
             _displayListFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "display-list.json");
         }
 
-        private DateTimeDisplayData dateTimeDisplayDataValue = new DateTimeDisplayData();
         public DateTimeDisplayData DateTimeDisplayData { get => RefreshDateTimeDisplay(); }
 
         public List<DisplayItem> GetDisplayItems()
@@ -32,8 +30,8 @@ namespace TimeReflector.Data
             if (storedList is not null) return storedList;
 
             var albumPath = Path.Combine(
-                _settingsManager.Configuration.AlbumsPath ?? "",
-                _settingsManager.Configuration.SelectedAlbum ?? ""
+                SettingsManager.Configuration.AlbumsPath ?? "",
+                SettingsManager.Configuration.SelectedAlbum ?? ""
                 );
 
             var dirInfo = new DirectoryInfo(albumPath);
@@ -62,7 +60,8 @@ namespace TimeReflector.Data
                     {
                         ImageFileName = file.Name,
                         IsVideo = isVideo,
-                        Rotate = rotateValue
+                        Rotate = rotateValue,
+                        AlbumPath = albumPath
                     };
 
                     var tmpKey = displayItem.ImageFileName.ToLower();
@@ -84,26 +83,26 @@ namespace TimeReflector.Data
         /// </summary>
         public void ClearItemList()
         {
-            _settingsManager = new();
-            _displayItems.Clear();
-
-            SaveDisplayList(_displayItems);
+            SettingsManager.ReLoadSettings();
+            SaveDisplayList([]);
         }
 
         public DisplayItem? GetNextItem()
         {
-            DisplayItem? displayItem = _displayItems.FirstOrDefault();
+            var displayItems = LoadDisplayList();
+
+            DisplayItem? displayItem = displayItems?.FirstOrDefault();
 
             if (displayItem is null)
             {
-                _displayItems = GetDisplayItems();
-                displayItem = _displayItems.FirstOrDefault();
+                displayItems = GetDisplayItems();
+                displayItem = displayItems.FirstOrDefault();
             }
 
             if (displayItem is not null)
             {
-                _displayItems.Remove(displayItem);
-                SaveDisplayList(_displayItems);
+                displayItems.Remove(displayItem);
+                SaveDisplayList(displayItems);
             }
             return displayItem;
         }
@@ -112,7 +111,7 @@ namespace TimeReflector.Data
         {
             var now = DateTime.Now;
 
-            switch (_settingsManager.Configuration.DateTimeFormat.TimeFormat)
+            switch (SettingsManager.Configuration.DateTimeFormat.TimeFormat)
             {
                 case TimeFormatType.None:
                     break;
@@ -127,7 +126,7 @@ namespace TimeReflector.Data
                     break;
             }
 
-            dateTimeDisplayDataValue.Date = _settingsManager.Configuration.DateTimeFormat.DateFormat switch
+            dateTimeDisplayDataValue.Date = SettingsManager.Configuration.DateTimeFormat.DateFormat switch
             {
                 DateFormatType.None => "",
                 // Date1: TUE, Set 23

@@ -6,6 +6,10 @@
         /// </summary>
         public string ImageFileName { get; set; } = default!;
         /// <summary>
+        /// Phyical path of the image.
+        /// </summary>
+        public string AlbumPath { get; set; } = default!;
+        /// <summary>
         /// Current supported format is mp4.
         /// </summary>
         public bool IsVideo { get; set; } = false;

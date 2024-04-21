@@ -12,4 +12,17 @@
         SystemDecorations="BorderOnly"
 		WindowState = "FullScreen"
 		>
+	<Grid x:Name="MainGrid" Margin="0" Background="{DynamicResource BackgroundBrush}"
+			   VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="*"/>
+			<ColumnDefinition Width="Auto"/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="*"/>	
+		</Grid.RowDefinitions>
+	</Grid>
 </Window>

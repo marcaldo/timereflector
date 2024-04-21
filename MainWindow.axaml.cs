@@ -14,8 +14,7 @@ namespace TimeReflector
 {
     public partial class MainWindow : Window
     {
-        private DisplayManager displayManager = new();
-        private SettingsManager settingsManager = new();
+        private readonly DisplayManager _displayManager;
 
         private TextBlock timeTextBlock = new();
         private TextBlock timeAmPmTextBlock = new();
@@ -28,6 +27,7 @@ namespace TimeReflector
 
         public MainWindow()
         {
+            _displayManager = new DisplayManager();
             InitializeComponent();
         }
 
@@ -52,7 +52,7 @@ namespace TimeReflector
         private void SetupTimers()
         {
             _timerDisplay = new DispatcherTimer();
-            _timerDisplay.Interval = TimeSpan.FromSeconds(settingsManager.Configuration.Duration.DisplaySeconds);
+            _timerDisplay.Interval = TimeSpan.FromSeconds(_displayManager.SettingsManager.Configuration.Duration.DisplaySeconds);
             _timerDisplay.Tick += TimerDisplay_Tick!;
             _timerDisplay.Start();
 
@@ -62,7 +62,7 @@ namespace TimeReflector
             _timerDateTime.Start();
 
             _timerWeather = new DispatcherTimer();
-            _timerWeather.Interval = TimeSpan.FromMinutes(settingsManager.Configuration.Duration.WheatherMinutes);
+            _timerWeather.Interval = TimeSpan.FromMinutes(_displayManager.SettingsManager.Configuration.Duration.WheatherMinutes);
             _timerWeather.Tick += TimerDateTime_Tick!;
             _timerWeather.Start();
         }
@@ -72,8 +72,8 @@ namespace TimeReflector
             _timerDisplay.Stop();
             _timerWeather.Stop();
 
-            _timerDisplay.Interval = TimeSpan.FromSeconds(settingsManager.Configuration.Duration.DisplaySeconds);
-            _timerWeather.Interval = TimeSpan.FromMinutes(settingsManager.Configuration.Duration.WheatherMinutes);
+            _timerDisplay.Interval = TimeSpan.FromSeconds(_displayManager.SettingsManager.Configuration.Duration.DisplaySeconds);
+            _timerWeather.Interval = TimeSpan.FromMinutes(_displayManager.SettingsManager.Configuration.Duration.WheatherMinutes);
 
             _timerDisplay.Start();
             _timerWeather.Start();
@@ -91,9 +91,9 @@ namespace TimeReflector
 
         private void TimerDateTime_Tick(object sender, EventArgs e)
         {
-            timeTextBlock.Text = displayManager.DateTimeDisplayData.Time;
-            timeAmPmTextBlock.Text = displayManager.DateTimeDisplayData.AmPm;
-            dateTextBlock.Text = displayManager.DateTimeDisplayData.Date;
+            timeTextBlock.Text = _displayManager.DateTimeDisplayData.Time;
+            timeAmPmTextBlock.Text = _displayManager.DateTimeDisplayData.AmPm;
+            dateTextBlock.Text = _displayManager.DateTimeDisplayData.Date;
         }
 
         private void TimerWeather_Tick(object sender, EventArgs e)
@@ -103,7 +103,7 @@ namespace TimeReflector
         {
             bool useAppDefaultImagePath = false;
 
-            var displayItem = displayManager.GetNextItem();
+            var displayItem = _displayManager.GetNextItem();
 
             if (displayItem is null) // No items in the album.
             {
@@ -122,7 +122,8 @@ namespace TimeReflector
 
         private void Display(DisplayItem displayItem, bool useAppDefaultImagePath)
         {
-            Grid grid = CreateWindowGrid();
+            //Grid grid = CreateWindowGrid();
+            Grid? grid = this.FindControl<Grid>("MainGrid");
 
             Border imageContainer = GetImageContainer(displayItem, useAppDefaultImagePath);
 
@@ -151,21 +152,17 @@ namespace TimeReflector
             grid.Cursor = TransparentCursor();
 
             // Add the grid to the window
-            this.Content = grid;
-        }
+            //this.Content = grid;
 
+        }
 
         private Border GetImageContainer(DisplayItem displayItem, bool useAppDefaultImagePath = false)
         {
             double viewPortHeight = this.ClientSize.Height;
             double viewPortWidth = this.ClientSize.Width;
 
-            string albumPath = useAppDefaultImagePath
-                ? Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images_default")
-                : Path.Combine(settingsManager.Configuration.AlbumsPath, settingsManager.Configuration.SelectedAlbum);
-
-            string imagePath = Path.Combine(albumPath, displayItem.ImageFileName);
-            Bitmap image = new(imagePath);
+            string imagePath = Path.Combine(displayItem.AlbumPath, displayItem.ImageFileName);
+            Bitmap? image = new(imagePath);
 
             Image backgroundImage = new Image
             {
@@ -194,6 +191,7 @@ namespace TimeReflector
             }
 
             return imageContainer;
+
         }
 
         private Grid DateTimeGrid()
@@ -211,14 +209,14 @@ namespace TimeReflector
             grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Star) });
             grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(0.5, GridUnitType.Star) });
 
-            var timeText = displayManager.DateTimeDisplayData.Time;
+            var timeText = _displayManager.DateTimeDisplayData.Time;
 
             var canvas = new Canvas { Margin = new Thickness(45) };
 
             var timeTextBlockBckg = new TextBlock
             {
                 Text = timeText,
-                FontSize = displayManager.DateTimeDisplayData.TimeFontStyle.FontSize,
+                FontSize = _displayManager.DateTimeDisplayData.TimeFontStyle.FontSize,
                 Foreground = Brush.Parse("#000000"),
                 Margin = Thickness.Parse("2"),
                 HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
@@ -230,8 +228,8 @@ namespace TimeReflector
             timeTextBlock = new TextBlock
             {
                 Text = timeText,
-                FontSize = displayManager.DateTimeDisplayData.TimeFontStyle.FontSize,
-                Foreground = Brush.Parse(displayManager.DateTimeDisplayData.TimeFontStyle.FontForegroundColor),
+                FontSize = _displayManager.DateTimeDisplayData.TimeFontStyle.FontSize,
+                Foreground = Brush.Parse(_displayManager.DateTimeDisplayData.TimeFontStyle.FontForegroundColor),
                 HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
                 VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
             };
@@ -249,9 +247,9 @@ namespace TimeReflector
 
             timeAmPmTextBlock = new TextBlock
             {
-                Text = displayManager.DateTimeDisplayData.AmPm,
-                FontSize = displayManager.DateTimeDisplayData.TimeFontStyle.FontSize * 0.4,
-                Foreground = Brush.Parse(displayManager.DateTimeDisplayData.TimeFontStyle.FontForegroundColor),
+                Text = _displayManager.DateTimeDisplayData.AmPm,
+                FontSize = _displayManager.DateTimeDisplayData.TimeFontStyle.FontSize * 0.4,
+                Foreground = Brush.Parse(_displayManager.DateTimeDisplayData.TimeFontStyle.FontForegroundColor),
                 HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
                 VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
             };
@@ -261,9 +259,9 @@ namespace TimeReflector
 
             dateTextBlock = new TextBlock
             {
-                Text = displayManager.DateTimeDisplayData.Date,
-                FontSize = displayManager.DateTimeDisplayData.DateFontStyle.FontSize,
-                Foreground = Brush.Parse(displayManager.DateTimeDisplayData.DateFontStyle.FontForegroundColor),
+                Text = _displayManager.DateTimeDisplayData.Date,
+                FontSize = _displayManager.DateTimeDisplayData.DateFontStyle.FontSize,
+                Foreground = Brush.Parse(_displayManager.DateTimeDisplayData.DateFontStyle.FontForegroundColor),
                 HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right,
                 VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top
             };
@@ -298,7 +296,7 @@ namespace TimeReflector
 
         private StackPanel ToolsPanel()
         {
-            var icon = displayManager.Icon("gear.png");
+            var icon = _displayManager.Icon("gear.png");
             icon.Cursor = new Cursor(StandardCursorType.Hand);
 
             // Subscribe to Click event
@@ -319,9 +317,9 @@ namespace TimeReflector
             var settingsWindow = new SettingsWindow();
             await settingsWindow.ShowDialog(this);
 
-            settingsManager.Configuration = settingsManager.ReLoadSettings();
+            _displayManager.SettingsManager.Configuration = _displayManager.SettingsManager.ReLoadSettings();
 
-            displayManager.ClearItemList();
+            _displayManager.ClearItemList();
             ResetTimers();
             RunDisplay();
         }
