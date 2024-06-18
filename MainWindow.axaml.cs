@@ -20,6 +20,9 @@ namespace TimeReflector
         private TextBlock timeAmPmTextBlock = new();
         private TextBlock dateTextBlock = new();
         private TextBlock tempTextBlock = new();
+        private TextBlock? _timeTextBlock;
+        private TextBlock? _amPmTextBlock;
+        private TextBlock? _dateTextBlock;
 
         private DispatcherTimer _timerDisplay;
         private DispatcherTimer _timerDateTime;
@@ -37,6 +40,11 @@ namespace TimeReflector
             AvaloniaXamlLoader.Load(this);
 
             Cursor = TransparentCursor();
+
+            _timeTextBlock = this.FindControl<TextBlock>("TimeTextBlock");
+            _amPmTextBlock = this.FindControl<TextBlock>("AmPmTextBlock");
+            _dateTextBlock = this.FindControl<TextBlock>("DateTextBlock");
+
 
             RunDisplay();
             SetupTimers();
@@ -92,9 +100,14 @@ namespace TimeReflector
 
         private void TimerDateTime_Tick(object sender, EventArgs e)
         {
-            timeTextBlock.Text = _displayManager.DateTimeDisplayData.Time;
-            timeAmPmTextBlock.Text = _displayManager.DateTimeDisplayData.AmPm;
-            dateTextBlock.Text = _displayManager.DateTimeDisplayData.Date;
+            //timeTextBlock.Text = _displayManager.DateTimeDisplayData.Time;
+            //timeAmPmTextBlock.Text = _displayManager.DateTimeDisplayData.AmPm;
+            //dateTextBlock.Text = _displayManager.DateTimeDisplayData.Date;
+
+            var now = DateTime.Now;
+            _timeTextBlock!.Text = now.ToString("hh:mm");
+            _amPmTextBlock!.Text = now.ToString("tt");
+            _dateTextBlock!.Text = now.ToString("dddd, MMMM dd");
         }
 
         private void TimerWeather_Tick(object sender, EventArgs e)
@@ -216,61 +229,61 @@ namespace TimeReflector
 
             var canvas = new Canvas { Margin = new Thickness(45) };
 
-            var timeTextBlockBckg = new TextBlock
-            {
-                Text = timeText,
-                FontSize = _displayManager.DateTimeDisplayData.TimeFontStyle.FontSize,
-                Foreground = Brush.Parse("#000000"),
-                Margin = Thickness.Parse("2"),
-                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
-                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
-            };
+            //var timeTextBlockBckg = new TextBlock
+            //{
+            //    Text = timeText,
+            //    FontSize = _displayManager.DateTimeDisplayData.TimeFontStyle.FontSize,
+            //    Foreground = Brush.Parse("#000000"),
+            //    Margin = Thickness.Parse("2"),
+            //    HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+            //    VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
+            //};
 
-            canvas.Children.Add(timeTextBlockBckg);
+            //canvas.Children.Add(timeTextBlockBckg);
 
-            timeTextBlock = new TextBlock
-            {
-                Text = timeText,
-                FontSize = _displayManager.DateTimeDisplayData.TimeFontStyle.FontSize,
-                Foreground = Brush.Parse(_displayManager.DateTimeDisplayData.TimeFontStyle.FontForegroundColor),
-                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
-                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
-            };
+            //timeTextBlock = new TextBlock
+            //{
+            //    Text = timeText,
+            //    FontSize = _displayManager.DateTimeDisplayData.TimeFontStyle.FontSize,
+            //    Foreground = Brush.Parse(_displayManager.DateTimeDisplayData.TimeFontStyle.FontForegroundColor),
+            //    HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+            //    VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
+            //};
 
-            canvas.Children.Add(timeTextBlock);
+            //canvas.Children.Add(timeTextBlock);
 
-            Canvas.SetLeft(timeTextBlockBckg, 0);
-            Canvas.SetTop(timeTextBlockBckg, 0);
-            Canvas.SetLeft(timeTextBlock, 0);
-            Canvas.SetTop(timeTextBlock, 0);
+            //Canvas.SetLeft(timeTextBlockBckg, 0);
+            //Canvas.SetTop(timeTextBlockBckg, 0);
+            //Canvas.SetLeft(timeTextBlock, 0);
+            //Canvas.SetTop(timeTextBlock, 0);
 
-            Grid.SetColumn(canvas, 0);
-            Grid.SetRow(canvas, 0);
-            grid.Children.Add(canvas);
+            //Grid.SetColumn(canvas, 0);
+            //Grid.SetRow(canvas, 0);
+            //grid.Children.Add(canvas);
 
-            timeAmPmTextBlock = new TextBlock
-            {
-                Text = _displayManager.DateTimeDisplayData.AmPm,
-                FontSize = _displayManager.DateTimeDisplayData.TimeFontStyle.FontSize * 0.4,
-                Foreground = Brush.Parse(_displayManager.DateTimeDisplayData.TimeFontStyle.FontForegroundColor),
-                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
-                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
-            };
-            Grid.SetColumn(timeAmPmTextBlock, 1);
-            Grid.SetRow(timeAmPmTextBlock, 0);
-            grid.Children.Add(timeAmPmTextBlock);
+            //timeAmPmTextBlock = new TextBlock
+            //{
+            //    Text = _displayManager.DateTimeDisplayData.AmPm,
+            //    FontSize = _displayManager.DateTimeDisplayData.TimeFontStyle.FontSize * 0.4,
+            //    Foreground = Brush.Parse(_displayManager.DateTimeDisplayData.TimeFontStyle.FontForegroundColor),
+            //    HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
+            //    VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
+            //};
+            //Grid.SetColumn(timeAmPmTextBlock, 1);
+            //Grid.SetRow(timeAmPmTextBlock, 0);
+            //grid.Children.Add(timeAmPmTextBlock);
 
-            dateTextBlock = new TextBlock
-            {
-                Text = _displayManager.DateTimeDisplayData.Date,
-                FontSize = _displayManager.DateTimeDisplayData.DateFontStyle.FontSize,
-                Foreground = Brush.Parse(_displayManager.DateTimeDisplayData.DateFontStyle.FontForegroundColor),
-                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right,
-                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top
-            };
-            Grid.SetColumn(dateTextBlock, 0);
-            Grid.SetRow(dateTextBlock, 1);
-            grid.Children.Add(dateTextBlock);
+            //dateTextBlock = new TextBlock
+            //{
+            //    Text = _displayManager.DateTimeDisplayData.Date,
+            //    FontSize = _displayManager.DateTimeDisplayData.DateFontStyle.FontSize,
+            //    Foreground = Brush.Parse(_displayManager.DateTimeDisplayData.DateFontStyle.FontForegroundColor),
+            //    HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right,
+            //    VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top
+            //};
+            //Grid.SetColumn(dateTextBlock, 0);
+            //Grid.SetRow(dateTextBlock, 1);
+            //grid.Children.Add(dateTextBlock);
 
             return grid;
         }
@@ -284,15 +297,15 @@ namespace TimeReflector
             grid.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch;
             grid.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch;
 
-            // Define ColumnDefinitions
-            grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
-            grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
-            grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
+            //// Define ColumnDefinitions
+            //grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
+            //grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
+            //grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
 
-            // Define RowDefinitions
-            grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(0.5, GridUnitType.Star) });
-            grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Star) });
-            grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(0.5, GridUnitType.Star) });
+            //// Define RowDefinitions
+            //grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(0.5, GridUnitType.Star) });
+            //grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Star) });
+            //grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(0.5, GridUnitType.Star) });
 
             return grid;
         }
@@ -330,7 +343,6 @@ namespace TimeReflector
 
         protected override void OnClosed(EventArgs e)
         {
-            // Dispose of the current bitmap when the window is closed to free up memory
             _currentBitmap?.Dispose();
             base.OnClosed(e);
         }

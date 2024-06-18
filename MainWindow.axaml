@@ -14,15 +14,23 @@
 		>
 	<Grid x:Name="MainGrid" Margin="0" Background="{DynamicResource BackgroundBrush}"
 			   VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="Auto"/>
-			<ColumnDefinition Width="*"/>
-			<ColumnDefinition Width="Auto"/>
-		</Grid.ColumnDefinitions>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="*"/>
-			<RowDefinition Height="*"/>
-			<RowDefinition Height="*"/>	
-		</Grid.RowDefinitions>
+		<StackPanel HorizontalAlignment="Left"
+				   VerticalAlignment="Bottom"
+				   Margin="10">
+			<StackPanel Orientation="Horizontal">
+				<TextBlock x:Name="TimeTextBlock"
+                       Foreground="White"
+                       FontSize="100"/>
+				<TextBlock x:Name="AmPmTextBlock"
+						   Foreground="White"
+						   FontSize="35"
+						   VerticalAlignment="Bottom"
+						   Margin="5,0,0,17"/>
+			</StackPanel>
+			<TextBlock x:Name="DateTextBlock"
+                       Foreground="Yellow"
+                       FontSize="35"
+                       Margin="5,10,0,25"/>
+		</StackPanel>
 	</Grid>
 </Window>
