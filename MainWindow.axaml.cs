@@ -24,6 +24,7 @@ namespace TimeReflector
         private DispatcherTimer _timerDisplay;
         private DispatcherTimer _timerDateTime;
         private DispatcherTimer _timerWeather;
+        private Bitmap _currentBitmap;
 
         public MainWindow()
         {
@@ -162,11 +163,13 @@ namespace TimeReflector
             double viewPortWidth = this.ClientSize.Width;
 
             string imagePath = Path.Combine(displayItem.AlbumPath, displayItem.ImageFileName);
-            Bitmap? image = new(imagePath);
+            _currentBitmap?.Dispose();
+            _currentBitmap = new Bitmap(imagePath);
+
 
             Image backgroundImage = new Image
             {
-                Source = image,
+                Source = _currentBitmap,
                 Stretch = Stretch.UniformToFill
             };
 
@@ -182,9 +185,9 @@ namespace TimeReflector
             };
 
             var minRatio = 1.5;
-            var imageRatio = image.Size.Width / image.Size.Height;
+            var imageRatio = _currentBitmap.Size.Width / _currentBitmap.Size.Height;
 
-            if (image.Size.Width > image.Size.Height && imageRatio > minRatio)
+            if (_currentBitmap.Size.Width > _currentBitmap.Size.Height && imageRatio > minRatio)
             {
                 imageContainer.Height = viewPortHeight;
                 imageContainer.Width = viewPortWidth;
@@ -302,10 +305,11 @@ namespace TimeReflector
             // Subscribe to Click event
             icon!.PointerPressed += OpenDialog_Click!;
 
-            // Add to StackPanel or any other container in your UI
-            var stackPanel = new StackPanel();
-            stackPanel.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right;
-            stackPanel.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Bottom;
+            var stackPanel = new StackPanel
+            {
+                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right,
+                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Bottom
+            };
             stackPanel.Children.Add(icon);
 
             return stackPanel;
@@ -322,6 +326,13 @@ namespace TimeReflector
             _displayManager.ClearItemList();
             ResetTimers();
             RunDisplay();
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            // Dispose of the current bitmap when the window is closed to free up memory
+            _currentBitmap?.Dispose();
+            base.OnClosed(e);
         }
 
     }
