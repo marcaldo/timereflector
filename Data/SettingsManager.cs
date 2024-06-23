@@ -19,7 +19,7 @@ namespace TimeReflector.Data
 
             Configuration = LoadSettings();
         }
-
+                                                                 
         public void SaveSettings()
         {
             string jsonSettings = JsonSerializer.Serialize(Configuration);

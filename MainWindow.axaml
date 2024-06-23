@@ -32,5 +32,11 @@
                        FontSize="35"
                        Margin="5,10,0,25"/>
 		</StackPanel>
+		<TextBlock x:Name="InfoTextBlock"
+				   HorizontalAlignment="Right"
+				   Foreground="OrangeRed"
+				   FontSize="18"
+				   Margin="5,10,0,25"/>
+
 	</Grid>
 </Window>

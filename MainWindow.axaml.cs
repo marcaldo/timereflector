@@ -23,6 +23,7 @@ namespace TimeReflector
         private TextBlock? _timeTextBlock;
         private TextBlock? _amPmTextBlock;
         private TextBlock? _dateTextBlock;
+        private TextBlock? _infoTextBlock;
 
         private DispatcherTimer _timerDisplay;
         private DispatcherTimer _timerDateTime;
@@ -44,6 +45,7 @@ namespace TimeReflector
             _timeTextBlock = this.FindControl<TextBlock>("TimeTextBlock");
             _amPmTextBlock = this.FindControl<TextBlock>("AmPmTextBlock");
             _dateTextBlock = this.FindControl<TextBlock>("DateTextBlock");
+            _infoTextBlock = this.FindControl<TextBlock>("InfoTextBlock");
 
 
             RunDisplay();
@@ -171,14 +173,31 @@ namespace TimeReflector
         }
 
         private Border GetImageContainer(DisplayItem displayItem, bool useAppDefaultImagePath = false)
-        {
+        {    
             double viewPortHeight = this.ClientSize.Height;
             double viewPortWidth = this.ClientSize.Width;
 
+            _infoTextBlock!.Text = string.Empty;
+
+
+            if (displayItem?.AlbumPath is null)
+            {
+                _displayManager.SettingsManager.ResetConfiguration();
+                displayItem = _displayManager.GetNextItem()!;
+            }
+
             string imagePath = Path.Combine(displayItem.AlbumPath, displayItem.ImageFileName);
             _currentBitmap?.Dispose();
-            _currentBitmap = new Bitmap(imagePath);
 
+            try
+            {
+                _currentBitmap = new Bitmap(imagePath);
+            }
+            catch (Exception ex)
+            {
+                _infoTextBlock!.Text =$"{ex.Message} - {imagePath}";
+                return new Border();
+            }
 
             Image backgroundImage = new Image
             {
