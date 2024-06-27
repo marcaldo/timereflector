@@ -34,6 +34,8 @@ namespace TimeReflector
         {
             _displayManager = new DisplayManager();
             InitializeComponent();
+
+            this.Cursor = new Cursor(StandardCursorType.Arrow);
         }
 
         private void InitializeComponent()
@@ -102,10 +104,6 @@ namespace TimeReflector
 
         private void TimerDateTime_Tick(object sender, EventArgs e)
         {
-            //timeTextBlock.Text = _displayManager.DateTimeDisplayData.Time;
-            //timeAmPmTextBlock.Text = _displayManager.DateTimeDisplayData.AmPm;
-            //dateTextBlock.Text = _displayManager.DateTimeDisplayData.Date;
-
             var now = DateTime.Now;
             _timeTextBlock!.Text = now.ToString("hh:mm");
             _amPmTextBlock!.Text = now.ToString("tt");
@@ -166,9 +164,6 @@ namespace TimeReflector
             grid.Children.Add(toolsPanel);
 
             grid.Cursor = TransparentCursor();
-
-            // Add the grid to the window
-            //this.Content = grid;
 
         }
 
@@ -248,83 +243,16 @@ namespace TimeReflector
 
             var canvas = new Canvas { Margin = new Thickness(45) };
 
-            //var timeTextBlockBckg = new TextBlock
-            //{
-            //    Text = timeText,
-            //    FontSize = _displayManager.DateTimeDisplayData.TimeFontStyle.FontSize,
-            //    Foreground = Brush.Parse("#000000"),
-            //    Margin = Thickness.Parse("2"),
-            //    HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
-            //    VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
-            //};
-
-            //canvas.Children.Add(timeTextBlockBckg);
-
-            //timeTextBlock = new TextBlock
-            //{
-            //    Text = timeText,
-            //    FontSize = _displayManager.DateTimeDisplayData.TimeFontStyle.FontSize,
-            //    Foreground = Brush.Parse(_displayManager.DateTimeDisplayData.TimeFontStyle.FontForegroundColor),
-            //    HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
-            //    VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
-            //};
-
-            //canvas.Children.Add(timeTextBlock);
-
-            //Canvas.SetLeft(timeTextBlockBckg, 0);
-            //Canvas.SetTop(timeTextBlockBckg, 0);
-            //Canvas.SetLeft(timeTextBlock, 0);
-            //Canvas.SetTop(timeTextBlock, 0);
-
-            //Grid.SetColumn(canvas, 0);
-            //Grid.SetRow(canvas, 0);
-            //grid.Children.Add(canvas);
-
-            //timeAmPmTextBlock = new TextBlock
-            //{
-            //    Text = _displayManager.DateTimeDisplayData.AmPm,
-            //    FontSize = _displayManager.DateTimeDisplayData.TimeFontStyle.FontSize * 0.4,
-            //    Foreground = Brush.Parse(_displayManager.DateTimeDisplayData.TimeFontStyle.FontForegroundColor),
-            //    HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
-            //    VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
-            //};
-            //Grid.SetColumn(timeAmPmTextBlock, 1);
-            //Grid.SetRow(timeAmPmTextBlock, 0);
-            //grid.Children.Add(timeAmPmTextBlock);
-
-            //dateTextBlock = new TextBlock
-            //{
-            //    Text = _displayManager.DateTimeDisplayData.Date,
-            //    FontSize = _displayManager.DateTimeDisplayData.DateFontStyle.FontSize,
-            //    Foreground = Brush.Parse(_displayManager.DateTimeDisplayData.DateFontStyle.FontForegroundColor),
-            //    HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right,
-            //    VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top
-            //};
-            //Grid.SetColumn(dateTextBlock, 0);
-            //Grid.SetRow(dateTextBlock, 1);
-            //grid.Children.Add(dateTextBlock);
-
             return grid;
         }
 
         private static Grid CreateWindowGrid()
         {
-            // Create a new Grid
             Grid grid = new();
 
             // Set the grid to fill the whole screen
             grid.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch;
             grid.VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch;
-
-            //// Define ColumnDefinitions
-            //grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
-            //grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
-            //grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
-
-            //// Define RowDefinitions
-            //grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(0.5, GridUnitType.Star) });
-            //grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Star) });
-            //grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(0.5, GridUnitType.Star) });
 
             return grid;
         }

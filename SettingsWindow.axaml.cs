@@ -187,11 +187,5 @@ namespace TimeReflector
             Close();
         }
 
-        //public sealed class ComboBoxItem : ListBoxItem
-        //{
-        //    public int Value { get; set; }
-        //    public string DisplayText { get; set; } = "";
-        //}
-
     }
 }
